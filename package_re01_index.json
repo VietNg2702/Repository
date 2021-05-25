@@ -14,19 +14,16 @@
           "architecture": "RE family",
           "version": "1.0.0",
           "category": "JASA",
-          "url": "https://github.com/VietNg2702/Repository/blob/main/RE01_100.zip",
+          "url": "https://github.com/VietNg2702/Repository/blob/main/RE01_100.zip?raw=true",
           "archiveFileName": "RE01_100.zip",
           "checksum": "SHA-256:9eb48332ec257874f3eb25217cc2322be26b481e443006b7138c85adc7ae920f",
           "size": "791217",
           "boards": [
             {"name": "EK-RE01-256KB"}
-          ],
-          "toolsDependencies": []
+          ]
         }
-        ],
-        "tools": []
+        ]
     }
-    
     ]
 }
   
