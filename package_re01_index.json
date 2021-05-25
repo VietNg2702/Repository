@@ -35,7 +35,7 @@
   "tools": [
     {
         "version": "10-2020-q4-major",
-        "name": "GNU Arm Embedded Toolchain",
+        "name": "arm-none-eabi-gcc",
         "systems": [
       {
           "url": "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-win32.zip?revision=ffcaa06c-940d-4319-8d7e-d3070092d392&la=en&hash=130196DDF95B0D9817E1FDE08A725C7EBFBFB5B8",
