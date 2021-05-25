@@ -26,7 +26,6 @@
  */
 
 #include "Arduino.h"
-#include "platform.h"
 #include "encoding.h"
 
 const struct variant_pin_map_s variant_pin_map[] = VARIANT_DIGITAL_PIN_MAP;
@@ -80,50 +79,16 @@ uint64_t divide64_using_inverse(uint64_t n, int_inverse *inv){
 
 uint32_t millis()
 {
-  uint64_t x;
-  rdmcycle(&x);
-  x = divide64_using_inverse(x, &f_cpu_1000_inv);
-  return((uint32_t) (x & 0xFFFFFFFF));
+  return 0;
 }
 
 uint32_t  micros(void)
 {
-  uint64_t x;
-  rdmcycle(&x);
-  // For Power-of-two MHz F_CPU,
-  // this compiles into a simple shift,
-  // and is faster than the general solution.
-#if F_CPU==16000000
-  x = x / (F_CPU / 1000000);
-#else
-#if  F_CPU==256000000
-  x = x / (F_CPU / 1000000);
-#else
-  x = divide64_using_inverse(x, &f_cpu_1000000_inv);
-#endif
-#endif
-  return((uint32_t) (x & 0xFFFFFFFF));
+  return 0;
 }
 
 
 void delay(uint32_t dwMs)
 {
-  uint64_t current, later;
-  rdmcycle(&current);
-  later = current + dwMs * (F_CPU/1000);
-  if (later > current) // usual case
-    {
-      while (later > current) {
-	rdmcycle(&current);
-      }
-    }
-  else // wrap. Though this is unlikely to be hit w/ 64-bit mcycle
-    {
-      while (later < current) {
-	rdmcycle(&current);
-      }
-      while (current < later) {
-	rdmcycle(&current);
-      }
-    }
+  
 }
