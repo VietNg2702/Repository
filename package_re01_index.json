@@ -24,7 +24,7 @@
           "toolsDependencies": [
             {
               "packager": "renesas-re", 
-              "version": "10-2020-q4-major", 
+              "version": "7-2017q4", 
               "name": "arm-none-eabi-gcc"
             }
           ]
@@ -34,16 +34,16 @@
     ],
   "tools": [
     {
-        "version": "10-2020-q4-major",
+        "version": "7-2017q4",
         "name": "arm-none-eabi-gcc",
         "systems": [
-      {
-          "url": "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-win32.zip?revision=ffcaa06c-940d-4319-8d7e-d3070092d392&la=en&hash=130196DDF95B0D9817E1FDE08A725C7EBFBFB5B8",
-          "checksum": "md5:5ee6542a2af847934177bc8fa1294c0d",
+        {
           "host": "i686-mingw32",
-          "archiveFileName": "gcc-arm-none-eabi-10-2020-q4-major-win32.zip",
-          "size": "199785259"
-      }
+          "url": "http://downloads.arduino.cc/tools/gcc-arm-none-eabi-7-2017-q4-major-win32-arduino1.zip",
+          "archiveFileName": "gcc-arm-none-eabi-7-2017-q4-major-win32-arduino1.zip",
+          "checksum": "SHA-256:96dd0091856f4d2eb21046eba571321feecf7d50b9c156f708b2a8b683903382",
+          "size": "131761924"
+        }
     ]
     }
   ]
