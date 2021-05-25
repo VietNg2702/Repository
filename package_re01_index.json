@@ -16,8 +16,8 @@
           "category": "SHCVN",
           "url": "https://github.com/VietNg2702/Repository/blob/main/RE01_100.zip?raw=true",
           "archiveFileName": "RE01_100.zip",
-          "checksum": "SHA-256:19ce27c01c9549719cdca52902be2b449f2e1ecd45b19ef8854df9caf4f97e97",
-          "size": "23422423",
+          "checksum": "SHA-256:eacca6f77bf8196bcba8845be56bb4673823fff8cbdb30d8a3f7a08c118f4448",
+          "size": "830471",
           "boards": [
             {"name": "EK-RE01-256KB"}
           ]
