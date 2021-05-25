@@ -1,7 +1,7 @@
 {
   "packages": [
     {
-      "name": "shcvn",
+      "name": "renesas-re",
       "maintainer": "SHCVN",
       "websiteURL": "",
       "email": "",
@@ -11,20 +11,42 @@
       "platforms": [
         {
           "name": "RE01 Boards",
-          "architecture": "RE family",
+          "architecture": "RENESAS RE family",
           "version": "1.0.0",
-          "category": "arduino",
+          "category": "renesas re family",
           "url": "https://github.com/VietNg2702/Repository/blob/main/RE01_100.zip?raw=true",
           "archiveFileName": "RE01_100.zip",
           "checksum": "SHA-256:eacca6f77bf8196bcba8845be56bb4673823fff8cbdb30d8a3f7a08c118f4448",
           "size": "830471",
           "boards": [
             {"name": "EK-RE01-256KB"}
+          ],
+          "toolsDependencies": [
+            {
+              "packager": "renesas-re", 
+              "version": "10-2020-q4-major", 
+              "name": "arm-none-eabi-gcc"
+            }
           ]
         }
         ]
     }
+    ],
+  "tools": [
+    {
+        "version": "10-2020-q4-major",
+        "name": "GNU Arm Embedded Toolchain",
+        "systems": [
+      {
+          "url": "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-win32.zip?revision=ffcaa06c-940d-4319-8d7e-d3070092d392&la=en&hash=130196DDF95B0D9817E1FDE08A725C7EBFBFB5B8",
+          "checksum": "MD5:5ee6542a2af847934177bc8fa1294c0d",
+          "host": "i686-mingw32",
+          "archiveFileName": "gcc-arm-none-eabi-10-2020-q4-major-win32.zip",
+          "size": "199785259"
+      }
     ]
+    }
+  ]
 }
   
   
