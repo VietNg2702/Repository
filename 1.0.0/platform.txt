@@ -1,0 +1,70 @@
+name=EK-RE01-256KB
+version=1.0.0
+
+# Compile tool path
+compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+
+# Compile s files options
+compiler.S.cmd=arm-none-eabi-gcc
+compiler.S.flags=-c -g -x assembler-with-cpp 
+
+# Compile c files options
+compiler.c.cmd=arm-none-eabi-gcc
+compiler.c.flags=-DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} -mcpu=cortex-m3 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb -c -g -Os -w -std=gnu99 -ffunction-sections -fdata-sections -fno-builtin -MMD
+
+# Compile cpp files options
+compiler.cpp.cmd=arm-none-eabi-g++
+compiler.cpp.flags=-DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} -mcpu=cortex-m3 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb -c -g -Os -w -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -fno-builtin -MMD
+
+# Compile includes
+compiler.re01_include="-I{runtime.platform.path}/cores/re01_256kb" "-I{runtime.platform.path}/cores/re01_256kb/CMSIS/Core/Include" "-I{runtime.platform.path}/cores/re01_256kb/CMSIS/Driver/Include" "-I{runtime.platform.path}/cores/re01_256kb/CMSIS/DSP_Lib/Include" "-I{runtime.platform.path}/cores/re01_256kb/config" "-I{runtime.platform.path}/cores/re01_256kb/Device" "-I{runtime.platform.path}/cores/re01_256kb/Device/CMSIS_Driver" "-I{runtime.platform.path}/cores/re01_256kb/Device/Config" "-I{runtime.platform.path}/cores/re01_256kb/Device/Driver" 
+
+# Create archives options
+compiler.ar.cmd=arm-none-eabi-ar
+compiler.ar.flags=rcs
+
+# Combine to create elf file options
+compiler.c.elf.cmd=arm-none-eabi-g++
+
+# Create bin file options
+compiler.elf2bin.cmd=arm-none-eabi-objcopy
+compiler.elf2bin.flags=-O binary
+
+# Create hex file options
+compiler.elf2hex.cmd=arm-none-eabi-objcopy
+compiler.elf2hex.flags=-O ihex
+
+# Calculate hex size options
+compiler.size.cmd=arm-none-eabi-size
+
+# Compile linkscript
+compiler.ld.cmd=arm-none-eabi-ld
+compiler.ld.flags=-T "{runtime.platform.path}/cores/re01_256kb/script"
+
+
+# Compile c files
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} {build.extra_flags} {compiler.re01_include} {includes} "{source_file}" -c -o "{object_file}"
+
+# Compile c++ files
+recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {build.extra_flags} {compiler.re01_include} {includes} "{source_file}" -c -o "{object_file}"
+
+# Compile S files
+recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {compiler.re01_include} "{source_file}" -c -o "{object_file}"
+
+# Create archives
+recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} "{archive_file_path}" "{object_file}"
+
+# Combine gc-sections, archives, and objects
+recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wl,--gc-sections --specs=nano.specs -mcpu={build.mcu} -mthumb {compiler.ld.flags} "-Wl,-Map={build.path}/{build.project_name}.map" -Wl,--cref -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -Wl,--warn-common -Wl,--start-group {object_files} "{runtime.platform.path}/cores/arduino/components/nfc/t2t_lib/nfc_t2t_lib_gcc.a" "{build.path}/{archive_file}" -Wl,--end-group
+
+# Create bin
+recipe.objcopy.eep.pattern="{compiler.path}{compiler.elf2bin.cmd}" {compiler.elf2bin.flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
+
+## Create hex
+recipe.objcopy.hex.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.hex"
+
+
+# Compute size
+recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
+
+

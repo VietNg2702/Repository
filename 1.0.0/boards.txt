@@ -1,0 +1,10 @@
+ek_re01_256kb.name=EK-RE01-256KB
+ek_re01_256kb.menu.toolsloc.default=Default
+ek_re01_256kb.menu.toolsloc.manual=Manual
+ek_re01_256kb.menu.toolsloc.default.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+ek_re01_256kb.menu.toolsloc.manual.compiler.path=
+
+ek_re01_256kb.build.variant=standard
+ek_re01_256kb.build.core=arduino
+ek_re01_256kb.build.board=EK_RE01_256KB 
+ek_re01_256kb.build.boardenv=ek-re01-256kb

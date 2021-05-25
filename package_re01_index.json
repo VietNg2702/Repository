@@ -1,8 +1,8 @@
 {
   "packages": [
     {
-      "name": "jasa",
-      "maintainer": "JASA",
+      "name": "shcvn",
+      "maintainer": "SHCVN",
       "websiteURL": "",
       "email": "",
       "help": {
@@ -13,11 +13,11 @@
           "name": "RE01 Boards",
           "architecture": "RE family",
           "version": "1.0.0",
-          "category": "JASA",
+          "category": "SHCVN",
           "url": "https://github.com/VietNg2702/Repository/blob/main/RE01_100.zip?raw=true",
           "archiveFileName": "RE01_100.zip",
-          "checksum": "SHA-256:9eb48332ec257874f3eb25217cc2322be26b481e443006b7138c85adc7ae920f",
-          "size": "791217",
+          "checksum": "SHA-256:19ce27c01c9549719cdca52902be2b449f2e1ecd45b19ef8854df9caf4f97e97",
+          "size": "23422423",
           "boards": [
             {"name": "EK-RE01-256KB"}
           ]
