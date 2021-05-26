@@ -18,33 +18,13 @@
 
 #include "Arduino.h"
 #include "wiring_private.h"
-#include "encoding.h"
-#include "drivers/plic/plic_driver.h"
 
 #include <string.h>
-
-// This includes all interrupts, like Watchdog Timer and
-// Real-Time Clock, not just external interrupts.
-static voidFuncPtr callbacksInt[PLIC_NUM_INTERRUPTS];
-
-static plic_instance_t g_plic;
 
 /* Configure I/O interrupt sources */
 static void __initialize()
 {
-  // Clear out all the callback registers
-  memset(callbacksInt, 0, sizeof(callbacksInt));
-
-  // PLIC Registers are not eset in general. Clear
-  // them out.
-  PLIC_init(&g_plic,
-	    PLIC_BASE_ADDR,
-	    PLIC_NUM_INTERRUPTS,
-	    PLIC_NUM_PRIORITIES);
-
-  // Set the global PLIC interrupt.
-  set_csr(mie, MIP_MEIP);
-
+  //TODO:
 }
 
 /*
@@ -53,53 +33,7 @@ static void __initialize()
  */
 void attachInterrupt(uint32_t intnum, voidFuncPtr callback, uint32_t mode)
 {
-  static int enabled = 0;
-
-  if (intnum > PLIC_NUM_INTERRUPTS) {
-    return;
-  }
-
-  if (!enabled) {
-    __initialize();
-    enabled = 1;
-  }
-
-  // Assign callback to interrupt
-  callbacksInt[intnum] = callback;
-
-  // In general, you'd have to configure the device to raise an
-  // interrupt. We make an exception for the GPIO pins and do the
-  // configuration here.
-  if (intnum >= INT_GPIO_BASE && intnum < (INT_GPIO_BASE + NUM_GPIO)) {
-    switch (mode)
-      {
-      case LOW:
-	GPIO_REG(GPIO_LOW_IE) |= (1 << (intnum - INT_GPIO_BASE));
-	break;
-      case HIGH:
-	GPIO_REG(GPIO_HIGH_IE) |= (1 << (intnum - INT_GPIO_BASE));
-	break;
-      case CHANGE:
-	GPIO_REG(GPIO_RISE_IE) |= (1 << (intnum - INT_GPIO_BASE));
-	GPIO_REG(GPIO_FALL_IE) |= (1 << (intnum - INT_GPIO_BASE));
-	break;
-      case FALLING:
-	GPIO_REG(GPIO_FALL_IE) |= (1 << (intnum - INT_GPIO_BASE));
-	break;
-      case RISING:
-	GPIO_REG(GPIO_RISE_IE) |= (1 << (intnum - INT_GPIO_BASE));
-	break;
-      }
-  }
-  
-  // Enable the interrupt in the PLIC (External interrupts are already
-  // globally enabled)
-  PLIC_enable_interrupt (&g_plic, intnum);
-
-  // Threshold is assumed to be 0. We have to set the priority > threshold
-  // to trigger the interrupt.
-  PLIC_set_priority(&g_plic, intnum, 1);
-  
+  //TODO:
 }
 
 /*
@@ -107,31 +41,14 @@ void attachInterrupt(uint32_t intnum, voidFuncPtr callback, uint32_t mode)
  */
 void detachInterrupt(uint32_t intnum)
 {
-  
-  PLIC_disable_interrupt(&g_plic, intnum);
-  PLIC_set_priority(&g_plic, intnum, 0);
-
-  // In general, you have to turn off the interrupt source
-  // For GPIO, we do it here.
-  if (intnum >= INT_GPIO_BASE  && intnum < (INT_GPIO_BASE + NUM_GPIO)) {
-    GPIO_REG(GPIO_LOW_IE)  &= ~( 1 << (intnum - INT_GPIO_BASE));
-    GPIO_REG(GPIO_HIGH_IE) &= ~( 1 << (intnum - INT_GPIO_BASE));
-    GPIO_REG(GPIO_RISE_IE) &= ~( 1 << (intnum - INT_GPIO_BASE));
-    GPIO_REG(GPIO_FALL_IE) &= ~( 1 << (intnum - INT_GPIO_BASE));
-  }
-
+  //TODO:
 }
 
 
 /*Entry Point for PLIC Interrupt Handler*/
-void handle_m_ext_interrupt(){
-  plic_source intnum  = PLIC_claim_interrupt(&g_plic);
-  if ((intnum >=1 ) &&
-      (intnum < PLIC_NUM_INTERRUPTS) &&
-      callbacksInt[intnum] != 0) {
-    callbacksInt[intnum]();
-  }
-  PLIC_complete_interrupt(&g_plic, intnum);
+void handle_m_ext_interrupt()
+{
+  //TODO:
 }
 
 /* TODO: Entry Point for Timer Interrupt Handler*/
@@ -143,14 +60,6 @@ void handle_m_time_interrupt() {
 
 uintptr_t handle_trap(uintptr_t mcause, uintptr_t epc)
 {
-  // External Machine-Level interrupt from PLIC
-  if ((mcause & MCAUSE_INT) && ((mcause & MCAUSE_CAUSE) == IRQ_M_EXT)) {
-    handle_m_ext_interrupt();
-  } else if ((mcause & MCAUSE_INT) && ((mcause & MCAUSE_CAUSE) == IRQ_M_TIMER)){
-    // Timer Interrupt
-    handle_m_time_interrupt();
-  }else {
-    while(1) {};
-  }
+  //TODO:
   return epc;
 }

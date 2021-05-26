@@ -26,41 +26,17 @@
  */
 
 #include "Arduino.h"
-#include "encoding.h"
 
-const struct variant_pin_map_s variant_pin_map[] = VARIANT_DIGITAL_PIN_MAP;
-const uint32_t variant_pin_map_size = sizeof(variant_pin_map) / sizeof(struct variant_pin_map_s);
 
-const volatile void * variant_pwm[] = VARIANT_PWM_LIST;
-const uint32_t variant_pwm_size = sizeof(variant_pwm) / sizeof(uint32_t*);
-
-// Efficient divide routines provided by Bruce Hoult on forums.sifive.com
-
-int_inverse f_cpu_1000_inv;
-int_inverse f_cpu_1000000_inv;
-
-void calc_inv(uint32_t n, int_inverse * res){
-  uint32_t one = ~0;
-  uint32_t d = one/n;
-  uint32_t r = one%n + 1;
-  if (r >= n) ++d;
-  if (d == 0) --d;
-  uint32_t shift = 0;
-  while ((d & 0x80000000) == 0){
-    d <<= 1;
-    ++shift;
-  }
-  res->n = n;
-  res->mult = d;
-  res->shift = shift;
+void calc_inv(uint32_t n, int_inverse * res)
+{
+  //TODO:
 }
 
-inline uint32_t divide32_using_inverse(uint32_t n, int_inverse *inv){
-
- uint32_t d =  (uint32_t)(((uint64_t)n * inv->mult) >> 32);
-   d >>= inv->shift;
-  if (n - d*inv->n >= inv->n) ++d;
-  return d;
+inline uint32_t divide32_using_inverse(uint32_t n, int_inverse *inv)
+{
+  //TODO:
+  return 0;
 }
 
 // Almost full-range 64/32 divide.
@@ -68,12 +44,10 @@ inline uint32_t divide32_using_inverse(uint32_t n, int_inverse *inv){
 // e.g. for divisors up to a million, n can have up to 45 bits
 // On RV32IM with divide32_using_inverse inlines this uses 5 multiplies,
 // 33 instructions, zero branches, 3 loads, 0 stores.
-uint64_t divide64_using_inverse(uint64_t n, int_inverse *inv){
-  uint32_t preshift = (31 - inv->shift) & 31;
-  uint64_t d = (uint64_t)divide32_using_inverse(n >> preshift, inv) << preshift;
-  uint32_t r = n - d * inv->n;
-  d += divide32_using_inverse(r, inv);
-  return d;
+uint64_t divide64_using_inverse(uint64_t n, int_inverse *inv)
+{
+  //TODO:
+  return 0;
 }
 
 

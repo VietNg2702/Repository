@@ -31,7 +31,7 @@
 // automatically includes it...
 #include <avr/pgmspace.h>
 //#include <avr/interrupt.h>
-
+#include "system_RE01_256KB.h"
 #include "binary.h"
 #include "pins_arduino.h"
 
@@ -41,8 +41,6 @@ extern "C"{
 
 #include "wiring.h"
 #include "wiring_constants.h"
-
-#define	SystemCoreClock 0 //TODO:
 
 #define clockCyclesPerMicrosecond() ( SystemCoreClock / 1000000L )
 #define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (SystemCoreClock / 1000L) )
