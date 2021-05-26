@@ -10,11 +10,11 @@ compiler.S.flags=-c -g -x assembler-with-cpp
 
 # Compile c files options
 compiler.c.cmd=arm-none-eabi-gcc
-compiler.c.flags=-DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} --specs=nosys.specs -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -g 
+compiler.c.flags=--specs=nosys.specs -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -g 
 
 # Compile cpp files options
 compiler.cpp.cmd=arm-none-eabi-g++
-compiler.cpp.flags=-DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} --specs=nosys.specs -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -g 
+compiler.cpp.flags=--specs=nosys.specs -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -g 
 
 # Compile includes
 compiler.re01_include="-I{runtime.platform.path}/variants/standard" "-I{runtime.platform.path}/cores" "-I{runtime.platform.path}/cores/avr" "-I{runtime.platform.path}/cores/re01_256kb" "-I{runtime.platform.path}/cores/re01_256kb/CMSIS/Core/Include" "-I{runtime.platform.path}/cores/re01_256kb/CMSIS/Driver/Include" "-I{runtime.platform.path}/cores/re01_256kb/CMSIS/DSP_Lib/Include" "-I{runtime.platform.path}/cores/re01_256kb/config" "-I{runtime.platform.path}/cores/re01_256kb/Device" "-I{runtime.platform.path}/cores/re01_256kb/Device/CMSIS_Driver" "-I{runtime.platform.path}/cores/re01_256kb/Device/Config" "-I{runtime.platform.path}/cores/re01_256kb/Device/Driver" 
@@ -43,10 +43,10 @@ compiler.ld.flags=-T "{runtime.platform.path}/cores/re01_256kb/script"
 
 
 # Compile c files
-recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} {compiler.re01_include} {includes} "{source_file}" -c -o "{object_file}"
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} {compiler.re01_include} "{source_file}" -c -o "{object_file}"
 
 # Compile c++ files
-recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {compiler.re01_include} {includes} "{source_file}" -c -o "{object_file}"
+recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {compiler.re01_include} "{source_file}" -c -o "{object_file}"
 
 # Compile S files
 recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {compiler.re01_include} "{source_file}" -c -o "{object_file}"
@@ -55,7 +55,7 @@ recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {compile
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} "{archive_file_path}" "{object_file}"
 
 # Combine gc-sections, archives, and objects
-recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" --specs=nosys.specs -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g {compiler.ld.flags} -Xlinker --gc-sections -Wl,-Map,"{build.path}/{build.project_name}.map" -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -Wl,--warn-common -Wl,--start-group {object_files} "
+recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" --specs=nosys.specs -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g {compiler.ld.flags} -Xlinker --gc-sections -Wl,-Map,"{build.path}/{build.project_name}.map" -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -Wl,--warn-common -Wl,--start-group {object_files}
 
 # Create bin
 recipe.objcopy.eep.pattern="{compiler.path}{compiler.elf2bin.cmd}" {compiler.elf2bin.flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
@@ -65,6 +65,6 @@ recipe.objcopy.hex.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf
 
 
 # Compute size
-recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
+recipe.size.pattern="{compiler.path}{compiler.size.cmd}" --format=berkeley "{build.path}/{build.project_name}.elf"
 
 
