@@ -23,7 +23,7 @@
           ],
           "toolsDependencies": [
             {
-              "packager": "arduino", 
+              "packager": "renesas-re", 
               "version": "7-2017q4", 
               "name": "arm-none-eabi-gcc"
             }
