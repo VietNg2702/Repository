@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "r_adc_cfg.h": "c"
+        "r_adc_cfg.h": "c",
+        "wiring_analog.h": "c"
     }
 }

@@ -19,13 +19,13 @@
 #ifndef _UART_CLASS_
 #define _UART_CLASS_
 
-#include "platform.h"
+
 #include "HardwareSerial.h"
 
 class UARTClass : public HardwareSerial
 {
   public:
-    UARTClass(uint32_t base = UART0_BASE_ADDR ) : serbase(reinterpret_cast<uint8_t*>(base)) {}
+    //UARTClass(uint32_t base = UART0_BASE_ADDR ) : serbase(reinterpret_cast<uint8_t*>(base)) {}
   
     void begin(unsigned long dwBaudRate);
     void end(void);

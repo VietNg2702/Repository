@@ -19,7 +19,7 @@
 #ifndef _WIRING_ANALOG_
 #define _WIRING_ANALOG_
 
-__BEGIN_DECLS
+ 
 
 
 typedef enum _eAnalogReference
@@ -78,6 +78,6 @@ extern void analogWritePhase(uint32_t pin, uint32_t phase);
 
 extern void analogOutputInit( void ) ;
 
-__END_DECLS
+  
 
 #endif /* _WIRING_ANALOG_ */

@@ -25,48 +25,22 @@
 
 UARTClass Serial;
 
-int
-UARTClass::sio_probe_rx()
+int UARTClass::sio_probe_rx()
 {
-  int32_t c;
-
-  if ((c = UART_REG(UART_REG_RXFIFO)) >= 0) {
-    sio_rxbuf[sio_rxbuf_head++] = c;
-    sio_rxbuf_head &= SIO_RXBUFMASK;
-    return(1);
-  }
+  //TODO:
   return(0);
 }
 
 
-int
-UARTClass::sio_getchar(int blocking)
+int UARTClass::sio_getchar(int blocking)
 {
-  int c, busy;
-
-  do {
-    sio_probe_rx();
-    busy = (sio_rxbuf_head == sio_rxbuf_tail);
-  } while (blocking && busy);
-
-  if (busy)
-    return (-1);
-  c = sio_rxbuf[sio_rxbuf_tail++];
-  sio_rxbuf_tail &= SIO_RXBUFMASK;
-  return (c);
+  //TODO:
+  return (0);
 }
 
-int
-UARTClass::sio_putchar(char c, int blocking)
+int UARTClass::sio_putchar(char c, int blocking)
 {
-  volatile uint32_t *val = UART_REGP(UART_REG_TXFIFO);
-  uint32_t busy = (*val) & 0x80000000;
-  if (blocking) {
-    while (*val & 0x80000000);
-  } else if (busy) {
-      return 1;
-  }
-  UART_REG(UART_REG_TXFIFO) = c;
+  //TODO:
   return 0; 
 }
 
@@ -74,95 +48,62 @@ UARTClass::sio_putchar(char c, int blocking)
 /*
  * Set RS-232 baudrate.  Works well with FT-232R from 300 to 3000000 bauds.
  */
-void
-UARTClass::sio_setbaud(int bauds)
+void UARTClass::sio_setbaud(int bauds)
 {
-
-  //F_Baud = f_in/(div+1) 
-
-  UART_REG(UART_REG_DIV) = F_CPU / bauds - 1;
- 
+  //TODO:
 }
 
 
 // Public Methods //////////////////////////////////////////////////////////////
 
-void
-UARTClass::begin(unsigned long bauds)
+void UARTClass::begin(unsigned long bauds)
 {
-  GPIO_REG(GPIO_OUTPUT_XOR)&= ~(IOF0_UART0_MASK);
-  GPIO_REG(GPIO_IOF_SEL)   &= ~(IOF0_UART0_MASK);
-  GPIO_REG(GPIO_IOF_EN)    |= IOF0_UART0_MASK;
-
-  //F_Baud = f_in/(div+1) 
-
-  UART_REG(UART_REG_DIV) = F_CPU / bauds - 1;
-  UART_REG(UART_REG_TXCTRL) |= UART_TXEN;
-  UART_REG(UART_REG_RXCTRL) |= UART_RXEN;
-
-	
-//  sio_setbaud(bauds);
+  //TODO:
 }
 
 
-void
-UARTClass::end(void)
+void UARTClass::end(void)
 {
-  GPIO_REG(GPIO_IOF_EN)    &= ~IOF0_UART0_MASK;
-
-  UART_REG(UART_REG_TXCTRL) &= ~UART_TXEN;
-  UART_REG(UART_REG_RXCTRL) &= ~UART_RXEN;
-
+  //TODO:
 }
 
 
-int
-UARTClass::available(void)
+int UARTClass::available(void)
 {
-
-  sio_probe_rx();
-  return (!(sio_rxbuf_head == sio_rxbuf_tail));
+  //TODO:
+  return (0);
 }
 
 
-int
-UARTClass::availableForWrite(void)
+int UARTClass::availableForWrite(void)
 {
-  int busy;
-  busy = ((int32_t)UART_REG(UART_REG_TXFIFO) < 0);
-  return (!busy);
+  //TODO:
+  return (0);
 }
 
 
-int
-UARTClass::peek(void)
+int UARTClass::peek(void)
 {
-  sio_probe_rx();
-  if (sio_rxbuf_tail == sio_rxbuf_head)
-    return (-1);
-  else
-    return (sio_rxbuf[sio_rxbuf_tail]);
+  //TODO:
+  return(0);
 }
 
 
-int
-UARTClass::read(void)
+int UARTClass::read(void)
 {
-
-  return (sio_getchar(1));
+  //TODO:
+  return (0);
 }
 
 
-void
-UARTClass::flush(void)
+void UARTClass::flush(void)
 {
+  //TODO:
 }
 
 
-size_t
-UARTClass::write(const uint8_t uc_data)
+size_t UARTClass::write(const uint8_t uc_data)
 {
-
-  sio_putchar(uc_data, 1);
+  //TODO:
   return (1);
 }

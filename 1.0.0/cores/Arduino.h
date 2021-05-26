@@ -42,7 +42,7 @@ extern "C"{
 #include "wiring.h"
 #include "wiring_constants.h"
 
-#define	SystemCoreClock F_CPU
+#define	SystemCoreClock 0 //TODO:
 
 #define clockCyclesPerMicrosecond() ( SystemCoreClock / 1000000L )
 #define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (SystemCoreClock / 1000L) )

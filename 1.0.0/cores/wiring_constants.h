@@ -19,7 +19,7 @@
 #ifndef _WIRING_CONSTANTS_
 #define _WIRING_CONSTANTS_
 
-__BEGIN_DECLS
+ 
 
 #define HIGH 0x1
 #define LOW  0x0
@@ -90,6 +90,6 @@ typedef unsigned int word;
 typedef bool boolean ;
 typedef uint8_t byte ;
 
-__END_DECLS
+  
 
 #endif /* _WIRING_CONSTANTS_ */

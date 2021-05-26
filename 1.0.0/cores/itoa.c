@@ -19,7 +19,7 @@
 #include "itoa.h"
 #include <string.h>
 
-__BEGIN_DECLS
+ 
 
 #if 0
 /* reverse:  reverse string s in place */
@@ -153,4 +153,4 @@ extern char* ultoa( unsigned long value, char *string, int radix )
 }
 #endif /* 0 */
 
-__END_DECLS
+  

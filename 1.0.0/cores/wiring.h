@@ -20,7 +20,6 @@
 #ifndef _WIRING_
 #define _WIRING_
 
-__BEGIN_DECLS
 
 /**
  *
@@ -120,6 +119,6 @@ static inline void delayMicroseconds(uint32_t usec) {
     }
 }
 
-__END_DECLS
+  
 
 #endif /* _WIRING_ */

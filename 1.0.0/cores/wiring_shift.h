@@ -19,7 +19,7 @@
 #ifndef _WIRING_SHIFT_
 #define _WIRING_SHIFT_
 
-__BEGIN_DECLS
+ 
 /*
  * \brief
  */
@@ -31,6 +31,6 @@ extern uint8_t shiftIn( uint8_t ulDataPin, uint8_t ulClockPin, uint8_t ulBitOrde
  */
 extern void shiftOut( uint8_t ulDataPin, uint8_t ulClockPin, uint8_t ulBitOrder, uint8_t ulVal ) ;
 
-__END_DECLS
+  
 
 #endif /* _WIRING_SHIFT_ */

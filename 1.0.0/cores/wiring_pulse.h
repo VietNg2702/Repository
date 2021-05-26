@@ -19,7 +19,7 @@
 #ifndef _WIRING_PULSE_
 #define _WIRING_PULSE_
 
-__BEGIN_DECLS
+ 
 
 /*
  * \brief Measures the length (in microseconds) of a pulse on the pin; state is HIGH
@@ -29,6 +29,6 @@ __BEGIN_DECLS
  */
 extern uint32_t pulseIn(uint32_t ulPin, bool ulState, uint32_t ulTimeout = 1000000L);
 
-__END_DECLS
+  
 
 #endif /* _WIRING_PULSE_ */

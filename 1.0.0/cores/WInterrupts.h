@@ -21,7 +21,7 @@
 
 #include <stdint.h>
 
-__BEGIN_DECLS
+ 
 
 //      LOW 0
 //      HIGH 1
@@ -36,11 +36,7 @@ __BEGIN_DECLS
 
   typedef void (*voidFuncPtr)(void);
 
-/*
- * \brief Specifies a named Interrupt Service Routine (ISR) to call when an interrupt occurs. Use digitalPinToInterrupt(pin) to get the correct intnum.
- *        Other interrupt numbers are available, see platform.h.
- *        Replaces any previous function that was attached to the interrupt.
- */
+
 void attachInterrupt(uint32_t intnum, voidFuncPtr callback, uint32_t mode);
 
 /*
@@ -48,6 +44,6 @@ void attachInterrupt(uint32_t intnum, voidFuncPtr callback, uint32_t mode);
  */
 void detachInterrupt(uint32_t intnum);
 
-__END_DECLS
+  
 
 #endif

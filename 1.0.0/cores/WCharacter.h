@@ -22,7 +22,7 @@
 
 #include <ctype.h>
 
-__BEGIN_DECLS
+ 
 
 // WCharacter.h prototypes
 #if defined (  __GNUC__  )
@@ -171,6 +171,6 @@ inline int toUpperCase(int c)
   return toupper (c);
 }
 
-__END_DECLS
+  
 
 #endif

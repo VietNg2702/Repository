@@ -25,7 +25,7 @@
 #ifndef WiringPrivate_h
 #define WiringPrivate_h
 
-__BEGIN_DECLS
+ 
 
 #include "Arduino.h"
 
@@ -36,6 +36,6 @@ __BEGIN_DECLS
 
 typedef void (*voidFuncPtr)(void);
 
-__END_DECLS
+  
 
 #endif

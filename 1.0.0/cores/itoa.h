@@ -19,11 +19,11 @@
 #ifndef _ITOA_
 #define _ITOA_
 
-__BEGIN_DECLS
+ 
 
 extern char* ltoa( long value, char *string, int radix ) ;
 extern char* ultoa( unsigned long value, char *string, int radix ) ;
 
-__END_DECLS
+  
 
 #endif // _ITOA_

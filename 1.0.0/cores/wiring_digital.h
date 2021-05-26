@@ -19,7 +19,7 @@
 #ifndef _WIRING_DIGITAL_
 #define _WIRING_DIGITAL_
 
-__BEGIN_DECLS
+ 
 
 #define PortValue_t uint32_t
 #define PortAddr_t uint32_t
@@ -65,6 +65,6 @@ extern void digitalWrite( uint32_t dwPin, uint32_t dwVal ) ;
  */
 extern int digitalRead( uint32_t ulPin ) ;
 
-__END_DECLS
+  
 
 #endif /* _WIRING_DIGITAL_ */
