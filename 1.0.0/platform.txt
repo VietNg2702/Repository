@@ -17,7 +17,7 @@ compiler.cpp.cmd=arm-none-eabi-g++
 compiler.cpp.flags=--specs=nosys.specs -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -g 
 
 # Compile includes
-compiler.re01_include="-I{runtime.platform.path}/variants/standard" "-I{runtime.platform.path}/cores" "-I{runtime.platform.path}/cores/avr" "-I{runtime.platform.path}/cores/re01_256kb" "-I{runtime.platform.path}/cores/re01_256kb/CMSIS/Core/Include" "-I{runtime.platform.path}/cores/re01_256kb/CMSIS/Driver/Include" "-I{runtime.platform.path}/cores/re01_256kb/CMSIS/DSP_Lib/Include" "-I{runtime.platform.path}/cores/re01_256kb/config" "-I{runtime.platform.path}/cores/re01_256kb/Device" "-I{runtime.platform.path}/cores/re01_256kb/Device/CMSIS_Driver" "-I{runtime.platform.path}/cores/re01_256kb/Device/Config" "-I{runtime.platform.path}/cores/re01_256kb/Device/Driver" 
+compiler.re01_include="-I{runtime.platform.path}/variants/standard" "-I{runtime.platform.path}/cores/arduino" "-I{runtime.platform.path}/cores/arduino/avr" "-I{runtime.platform.path}/cores/arduino/re01_256kb" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/Core/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/Driver/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/DSP_Lib/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/config" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/CMSIS_Driver" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Config" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Driver" 
 
 # Create archives options
 compiler.ar.cmd=arm-none-eabi-ar
