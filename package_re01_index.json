@@ -29,24 +29,25 @@
             }
           ]
         }
-        ]
-    }
-    ],
-  "tools": [
-    {
-        "version": "7-2017q4",
-        "name": "arm-none-eabi-gcc",
-        "systems": [
+        ],
+      "tools": [
         {
-          "host": "i686-mingw32",
-          "url": "http://downloads.arduino.cc/tools/gcc-arm-none-eabi-7-2017-q4-major-win32-arduino1.zip",
-          "archiveFileName": "gcc-arm-none-eabi-7-2017-q4-major-win32-arduino1.zip",
-          "checksum": "SHA-256:96dd0091856f4d2eb21046eba571321feecf7d50b9c156f708b2a8b683903382",
-          "size": "131761924"
+            "version": "7-2017q4",
+            "name": "arm-none-eabi-gcc",
+            "systems": [
+            {
+              "host": "i686-mingw32",
+              "url": "http://downloads.arduino.cc/tools/gcc-arm-none-eabi-7-2017-q4-major-win32-arduino1.zip",
+              "archiveFileName": "gcc-arm-none-eabi-7-2017-q4-major-win32-arduino1.zip",
+              "checksum": "SHA-256:96dd0091856f4d2eb21046eba571321feecf7d50b9c156f708b2a8b683903382",
+              "size": "131761924"
+            }
+        ]
         }
-    ]
+      ]
     }
-  ]
+    ]
+  
 }
   
   
