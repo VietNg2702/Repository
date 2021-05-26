@@ -10,11 +10,11 @@ compiler.S.flags=-c -g -x assembler-with-cpp
 
 # Compile c files options
 compiler.c.cmd=arm-none-eabi-gcc
-compiler.c.flags=-DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} -mcpu=cortex-m0 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb -c -g -Os -w -std=gnu99 -ffunction-sections -fdata-sections -fno-builtin -MMD
+compiler.c.flags=-DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} --specs=nosys.specs -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -g 
 
 # Compile cpp files options
 compiler.cpp.cmd=arm-none-eabi-g++
-compiler.cpp.flags=-DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} -mcpu=cortex-m0 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb -c -g -Os -w -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -fno-builtin -MMD
+compiler.cpp.flags=-DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} --specs=nosys.specs -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -g 
 
 # Compile includes
 compiler.re01_include="-I{runtime.platform.path}/variants/standard" "-I{runtime.platform.path}/cores" "-I{runtime.platform.path}/cores/avr" "-I{runtime.platform.path}/cores/re01_256kb" "-I{runtime.platform.path}/cores/re01_256kb/CMSIS/Core/Include" "-I{runtime.platform.path}/cores/re01_256kb/CMSIS/Driver/Include" "-I{runtime.platform.path}/cores/re01_256kb/CMSIS/DSP_Lib/Include" "-I{runtime.platform.path}/cores/re01_256kb/config" "-I{runtime.platform.path}/cores/re01_256kb/Device" "-I{runtime.platform.path}/cores/re01_256kb/Device/CMSIS_Driver" "-I{runtime.platform.path}/cores/re01_256kb/Device/Config" "-I{runtime.platform.path}/cores/re01_256kb/Device/Driver" 
@@ -55,7 +55,7 @@ recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {compile
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} "{archive_file_path}" "{object_file}"
 
 # Combine gc-sections, archives, and objects
-recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wl,--gc-sections --specs=nano.specs -mcpu={build.mcu} -mthumb {compiler.ld.flags} "-Wl,-Map={build.path}/{build.project_name}.map" -Wl,--cref -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -Wl,--warn-common -Wl,--start-group {object_files} "{runtime.platform.path}/cores/arduino/components/nfc/t2t_lib/nfc_t2t_lib_gcc.a" "{build.path}/{archive_file}" -Wl,--end-group
+recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" --specs=nosys.specs -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g {compiler.ld.flags} -Xlinker --gc-sections -Wl,-Map,"{build.path}/{build.project_name}.map" -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -Wl,--warn-common -Wl,--start-group {object_files} "
 
 # Create bin
 recipe.objcopy.eep.pattern="{compiler.path}{compiler.elf2bin.cmd}" {compiler.elf2bin.flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
