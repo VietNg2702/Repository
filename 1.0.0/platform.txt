@@ -43,10 +43,10 @@ compiler.ld.flags=-T "{runtime.platform.path}/cores/re01_256kb/script"
 
 
 # Compile c files
-recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} {build.extra_flags} {compiler.re01_include} {includes} "{source_file}" -c -o "{object_file}"
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} {compiler.re01_include} {includes} "{source_file}" -c -o "{object_file}"
 
 # Compile c++ files
-recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {build.extra_flags} {compiler.re01_include} {includes} "{source_file}" -c -o "{object_file}"
+recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {compiler.re01_include} {includes} "{source_file}" -c -o "{object_file}"
 
 # Compile S files
 recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {compiler.re01_include} "{source_file}" -c -o "{object_file}"
