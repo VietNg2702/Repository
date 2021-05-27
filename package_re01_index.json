@@ -39,7 +39,7 @@
               "host": "i686-mingw32",
               "url": "https://developer.arm.com/-/media/Files/downloads/gnu-rm/6-2017q2/gcc-arm-none-eabi-6-2017-q2-update-win32.zip?revision=d8809bf7-a431-49ee-98d5-0475d839f8f1?product=GNU%20Arm%20Embedded%20Toolchain%20Downloads,ZIP,,Windows,6-2017-q2-update",
               "archiveFileName": "gcc-arm-none-eabi-6-2017-q2-update-win32.zip",
-              "checksum": "SHA-256:615f9c44d3fba555e1a794b244d483575c45177b70da632dcd6e749ba5741826",
+              "checksum": "MD5:df6c2f763a6114c951e3f1e509af3cbc",
               "size": "131285223"
             }
         ]
