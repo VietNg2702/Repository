@@ -16,15 +16,15 @@
           "category": "renesas re family",
           "url": "https://github.com/VietNg2702/Repository/blob/main/RE01_100.zip?raw=true",
           "archiveFileName": "RE01_100.zip",
-          "checksum": "SHA-256:dce1009a1ab3e0f599ff1ffd63673068eddf4f09c78d4effd6b5f1c65f55c72c",
-          "size": "832130",
+          "checksum": "SHA-256:1638389ec880a747592dd89f96408551163845b35a587d6ddfb6f385facb3ff0",
+          "size": "832162",
           "boards": [
             {"name": "EK-RE01-256KB"}
           ],
           "toolsDependencies": [
             {
               "packager": "renesas-re", 
-              "version": "7-2017q4", 
+              "version": "6-2017-q2-update", 
               "name": "arm-none-eabi-gcc"
             }
           ]
@@ -32,15 +32,15 @@
         ],
       "tools": [
         {
-            "version": "7-2017q4",
+            "version": "6-2017-q2-update",
             "name": "arm-none-eabi-gcc",
             "systems": [
             {
               "host": "i686-mingw32",
-              "url": "http://downloads.arduino.cc/tools/gcc-arm-none-eabi-7-2017-q4-major-win32-arduino1.zip",
-              "archiveFileName": "gcc-arm-none-eabi-7-2017-q4-major-win32-arduino1.zip",
-              "checksum": "SHA-256:96dd0091856f4d2eb21046eba571321feecf7d50b9c156f708b2a8b683903382",
-              "size": "131761924"
+              "url": "https://developer.arm.com/-/media/Files/downloads/gnu-rm/6-2017q2/gcc-arm-none-eabi-6-2017-q2-update-win32.zip?revision=d8809bf7-a431-49ee-98d5-0475d839f8f1?product=GNU%20Arm%20Embedded%20Toolchain%20Downloads,ZIP,,Windows,6-2017-q2-update",
+              "archiveFileName": "gcc-arm-none-eabi-6-2017-q2-update-win32.zip",
+              "checksum": "SHA-256:615f9c44d3fba555e1a794b244d483575c45177b70da632dcd6e749ba5741826",
+              "size": "131285223"
             }
         ]
         }
