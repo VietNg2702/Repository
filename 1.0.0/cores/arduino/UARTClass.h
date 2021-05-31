@@ -22,11 +22,12 @@
 
 #include "HardwareSerial.h"
 
+#define BUFFER_SIZE                (256)
+
 class UARTClass : public HardwareSerial
 {
   public:
-    //UARTClass(uint32_t base = UART0_BASE_ADDR ) : serbase(reinterpret_cast<uint8_t*>(base)) {}
-  
+   
     void begin(unsigned long dwBaudRate);
     void end(void);
     int available(void);
@@ -38,26 +39,11 @@ class UARTClass : public HardwareSerial
     using Print::write; // pull in write(str) and write(buf, size) from Print
 
     operator bool() {return (true);}; // UART always active
-
-    // f32c extension (default is XON/XOFF enabled - so input is not transparent)
-//    void setXoffXon(bool enable) { if (enable) tx_xoff &= ~0x80; else tx_xoff = 0x80; }
-
   protected:
-    int sio_probe_rx();
-    int sio_getchar(int blocking);
-    int sio_putchar(char c, int blocking);
-    void sio_setbaud(int bauds);
-    
-    enum {
-      SIO_RXBUFSIZE = (1 << 3),
-      SIO_RXBUFMASK = (SIO_RXBUFSIZE - 1)
-    };
-
-    volatile uint8_t *serbase;  // base address of SIO register for port
-//    volatile uint8_t  tx_xoff;  // bit 7 set = disable Xoff/Xon flow control
-    volatile uint8_t  sio_rxbuf_head;
-    volatile uint8_t  sio_rxbuf_tail;
-    char              sio_rxbuf[SIO_RXBUFSIZE];
+    uint32_t g_current_received_data = 0;
+    uint32_t g_prog_mode = 0;
+    volatile uint32_t g_detect_command_flag = 0;
+    uint8_t g_receive_buffer[BUFFER_SIZE] = {0};
 };
 
 #endif // _UART_CLASS_
