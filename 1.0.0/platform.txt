@@ -55,7 +55,7 @@ recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {compile
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} "{archive_file_path}" "{object_file}"
 
 # Combine gc-sections, archives, and objects
-recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" --specs=nosys.specs -mcpu=cortex-m0plus -march=armv6-m -mthumb -mlittle-endian -mfloat-abi=soft -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wno-narrowing -g {compiler.ld.flags} -Xlinker --gc-sections -Wl,-Map={build.path}/{build.project_name}.map -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -Wl,--warn-common -Wl,--start-group {object_files}
+recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" --specs=nosys.specs -mcpu=cortex-m0plus -march=armv6-m -mthumb -mlittle-endian -mfloat-abi=soft -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wno-narrowing -g {compiler.ld.flags} "-L{build.path}" -Wl,--warn-common -Wl,--start-group {object_files}  -Xlinker --gc-sections -Wl,-Map={build.path}/{build.project_name}.map -Wl,--end-group -o "{build.path}/{build.project_name}.elf"
 
 # Create bin
 recipe.objcopy.eep.pattern="{compiler.path}{compiler.elf2bin.cmd}" {compiler.elf2bin.flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
