@@ -10,18 +10,19 @@ compiler.S.flags=-c -g -x assembler-with-cpp
 
 # Compile c files options
 compiler.c.cmd=arm-none-eabi-gcc
-compiler.c.flags=--specs=nosys.specs -mcpu=cortex-m0plus -march=armv6-m -mthumb -mlittle-endian -mfloat-abi=soft -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -g -Wno-narrowing
+compiler.c.flags=-std=gnu99 --specs=nosys.specs -mcpu=cortex-m0plus -march=armv6-m -mthumb -mlittle-endian -mfloat-abi=soft -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -g -Wno-narrowing
 
 # Compile cpp files options
 compiler.cpp.cmd=arm-none-eabi-g++
-compiler.cpp.flags=--specs=nosys.specs -mcpu=cortex-m0plus -march=armv6-m -mthumb -mlittle-endian -mfloat-abi=soft -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -g -Wno-narrowing
-
+compiler.cpp.flags=-std=gnu++11 --specs=nosys.specs -mcpu=cortex-m0plus -march=armv6-m -mthumb -mlittle-endian -mfloat-abi=soft -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -g -Wno-narrowing
+#
 # Compile includes
-compiler.re01_include="-I{runtime.platform.path}/variants/standard" "-I{runtime.platform.path}/cores/arduino" "-I{runtime.platform.path}/cores/arduino/avr" "-I{runtime.platform.path}/cores/arduino/re01_256kb" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/Core/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/Driver/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/DSP_Lib/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/config" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/CMSIS_Driver/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Config" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Driver" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Driver/include" 
+compiler.re01_include="-I{runtime.platform.path}/variants/standard" "-I{runtime.platform.path}/cores/arduino" "-I{runtime.platform.path}/cores/arduino/avr" "-I{runtime.platform.path}/cores/arduino/re01_256kb" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/Core/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/Driver/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/DSP_Lib/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/config" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/CMSIS_Driver/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Config" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Driver" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Driver/Include" 
 
 # Create archives options
 compiler.ar.cmd=arm-none-eabi-ar
 compiler.ar.flags=rcs
+archive_file_path={build.path}/{archive_file}
 
 # Combine to create elf file options
 compiler.c.elf.cmd=arm-none-eabi-g++
@@ -55,7 +56,7 @@ recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {compile
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} "{archive_file_path}" "{object_file}"
 
 # Combine gc-sections, archives, and objects
-recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" --specs=nosys.specs -mcpu=cortex-m0plus -march=armv6-m -mthumb -mlittle-endian -mfloat-abi=soft -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wno-narrowing -g {compiler.ld.flags} "-L{build.path}" -Wl,--warn-common -Wl,--start-group {object_files}  -Xlinker --gc-sections -Wl,-Map={build.path}/{build.project_name}.map -Wl,--end-group -o "{build.path}/{build.project_name}.elf"
+recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" -std=gnu++11 --specs=nosys.specs -mcpu=cortex-m0plus -march=armv6-m -mthumb -mlittle-endian -mfloat-abi=soft -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wno-narrowing -g {compiler.ld.flags} -Xlinker --gc-sections -Wl,-Map={build.path}/{build.project_name}.map -o "{build.path}/{build.project_name}.elf" "-L{build.path}/{archive_file}" -Wl,--warn-common -Wl,--start-group {object_files} "{archive_file_path}"
 
 # Create bin
 recipe.objcopy.eep.pattern="{compiler.path}{compiler.elf2bin.cmd}" {compiler.elf2bin.flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"

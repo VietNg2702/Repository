@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2011 Arduino.  All right reserved.
+  Copyright (c) 2016 Arduino.  All right reserved.
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,9 @@
 #include "itoa.h"
 #include <string.h>
 
- 
+#ifdef __cplusplus
+extern "C"{
+#endif // __cplusplus
 
 #if 0
 /* reverse:  reverse string s in place */
@@ -63,6 +65,11 @@ extern void itoa( int n, char s[] )
 }
 
 #else
+
+extern char* itoa( int value, char *string, int radix )
+{
+  return ltoa( value, string, radix ) ;
+}
 
 extern char* ltoa( long value, char *string, int radix )
 {
@@ -114,6 +121,11 @@ extern char* ltoa( long value, char *string, int radix )
   return string;
 }
 
+extern char* utoa( unsigned int value, char *string, int radix )
+{
+  return ultoa( value, string, radix ) ;
+}
+
 extern char* ultoa( unsigned long value, char *string, int radix )
 {
   char tmp[33];
@@ -153,4 +165,6 @@ extern char* ultoa( unsigned long value, char *string, int radix )
 }
 #endif /* 0 */
 
-  
+#ifdef __cplusplus
+} // extern "C"
+#endif // __cplusplus

@@ -382,9 +382,11 @@ void Reset_Handler( void )               /* @suppress("Function description comm
 
     /* Copy initialized RAM data from ROM to RAM. */
     bytes = (uint32_t)&__data_end__ - (uint32_t)&__data_start__;
-    for (uint32_t index = 0U; index < bytes; index++, pdest++, psource++)
+    for (uint32_t index = 0U; index < bytes; index++)
     {
         *pdest = *psource;
+        pdest++;
+        psource++;
     }
 
     main();

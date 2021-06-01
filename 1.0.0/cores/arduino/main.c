@@ -73,7 +73,7 @@ int main()
     while(1)
     {
         loop();
-		    if (serialEventRun) serialEventRun();
+		//if (serialEventRun) serialEventRun();
     }
 
   return 0;
