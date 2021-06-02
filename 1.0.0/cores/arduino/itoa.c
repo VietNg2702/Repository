@@ -120,7 +120,6 @@ extern char* ultoa( unsigned long value, char *string, int radix )
 
   return string;
 }
-#endif /* 0 */
 
 #ifdef __cplusplus
 } // extern "C"

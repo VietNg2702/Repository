@@ -26,11 +26,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// some libraries and sketches depend on this
-// AVR stuff, assuming Arduino.h or WProgram.h
-// automatically includes it...
 #include <avr/pgmspace.h>
-//#include <avr/interrupt.h>
 
 #include "binary.h"
 #include "pins_arduino.h"
@@ -52,7 +48,6 @@ void yield(void);
 extern void setup( void ) ;
 extern void loop( void ) ;
 
-typedef void (*voidFuncPtr)( void ) ;
 
 /* Define attribute */
 #define WEAK __attribute__ ((weak))
