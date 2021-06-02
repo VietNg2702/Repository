@@ -7,6 +7,8 @@
         "wiring_pulse.h": "c",
         "winterrupts.h": "c",
         "variant.h": "c",
-        "wiring.h": "c"
+        "wiring.h": "c",
+        "pins_arduino.h": "c",
+        "wiring_digital.h": "c"
     }
 }

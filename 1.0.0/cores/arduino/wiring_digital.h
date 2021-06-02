@@ -19,17 +19,6 @@
 #ifndef _WIRING_DIGITAL_
 #define _WIRING_DIGITAL_
 
- 
-
-#define PortValue_t uint32_t
-#define PortAddr_t uint32_t
-#define PortRegister_t volatile uint32_t *
-
-#define digitalPinToPort(pin)    ((PortAddr_t)     GPIO_BASE_ADDR)
-#define digitalPinToPortIn(pin)  ((PortAddr_t)     GPIO_BASE_ADDR)
-#define digitalPinToBitMask(pin) ((PortValue_t)    (1<<variant_pin_map[pin].bit_pos))
-#define portOutputRegister(port) ((PortRegister_t) (GPIO_BASE_ADDR + GPIO_OUTPUT_VAL))
-#define portInputRegister(port)  ((PortRegister_t) (GPIO_BASE_ADDR + GPIO_INPUT_VAL))
 
 /**
  * \brief Configures the specified pin to behave either as an input or an output. See the description of digital pins for details.

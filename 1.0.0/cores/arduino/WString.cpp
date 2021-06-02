@@ -22,10 +22,6 @@
 #include "WString.h"
 #include "itoa.h"
 
-#ifdef NOTYET /* XXX Marko FIXME! */
-#include "avr/dtostrf.h"
-#endif
-
 extern "C" {
 #include "avr/pgmspace.h"
 }
@@ -113,22 +109,6 @@ String::String(unsigned long value, unsigned char base)
 	ultoa(value, buf, base);
 	*this = buf;
 }
-
-#ifdef NOTYET /* XXX Marko FIXME! */
-String::String(float value, unsigned char decimalPlaces)
-{
-	init();
-	char buf[33];
-	*this = dtostrf(value, (decimalPlaces + 2), decimalPlaces, buf);
-}
-
-String::String(double value, unsigned char decimalPlaces)
-{
-	init();
-	char buf[33];
-	*this = dtostrf(value, (decimalPlaces + 2), decimalPlaces, buf);
-}
-#endif /* XXX Marko FIXME! */
 
 String::~String()
 {
@@ -743,21 +723,3 @@ void String::trim(void)
 	if (begin > buffer) memcpy(buffer, begin, len);
 	buffer[len] = 0;
 }
-
-/*********************************************/
-/*  Parsing / Conversion                     */
-/*********************************************/
-
-#ifdef NOTYET /* XXX Marko FIXME! */
-long String::toInt(void) const
-{
-	if (buffer) return atol(buffer);
-	return 0;
-}
-
-float String::toFloat(void) const
-{
-	if (buffer) return float(atof(buffer));
-	return 0;
-}
-#endif /* XXX Marko FIXME! */
