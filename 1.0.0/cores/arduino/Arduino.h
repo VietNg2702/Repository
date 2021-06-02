@@ -31,14 +31,14 @@
 // automatically includes it...
 #include <avr/pgmspace.h>
 //#include <avr/interrupt.h>
-#include "system_RE01_256KB.h"
+
 #include "binary.h"
 #include "pins_arduino.h"
 
 #ifdef __cplusplus
-extern "C"{
-#endif // __cplusplus
-
+extern "C" {
+#endif
+#include "system_RE01_256KB.h"
 #include "wiring.h"
 #include "wiring_constants.h"
 
@@ -58,22 +58,21 @@ typedef void (*voidFuncPtr)( void ) ;
 #define WEAK __attribute__ ((weak))
 
 #ifdef __cplusplus
-} // extern "C"
-
+}
 #include "WCharacter.h"
 #include "WString.h"
 #include "WMath.h"
 #include "HardwareSerial.h"
 #include "wiring_pulse.h"
+#endif
 
-#endif // __cplusplus
 
 // Include board variant
 #include "variant.h"
-
 #include "wiring_digital.h"
 #include "wiring_analog.h"
 #include "wiring_shift.h"
 #include "WInterrupts.h"
+
 
 #endif // Arduino_h

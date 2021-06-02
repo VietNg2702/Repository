@@ -16,37 +16,37 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef _UART_CLASS_
-#define _UART_CLASS_
+#ifndef __RING_BUFFER_T
+#define __RING_BUFFER_T
 
+#include <stdint.h>
 
-#include "HardwareSerial.h"
-#include "RingBuffer.h"
-#include "r_usart_cmsis_api.h"
-#include <cstddef>
+// Define constants and variables for buffering incoming serial data.  We're
+// using a ring buffer (I think), in which head is the index of the location
+// to which to write the next incoming character and tail is the index of the
+// location from which to read.
+#define SERIAL_BUFFER_SIZE 64
 
-#define USART_CH Driver_USART0
-
-extern ARM_DRIVER_USART USART_CH;
-
-class UARTClass : public HardwareSerial
+template<class T, int size> 
+class RingBufferT
 {
   public:
-    UARTClass(uint8_t Tx_pin, uint8_t Rx_pin);
-    void begin(unsigned long dwBaudRate);
-    void end(void);
-    int available(void);
-    int availableForWrite(void);
-    int peek(void);
-    int read(void);
-    void flush(void);
-    size_t write(const uint8_t data);
-    size_t write(const char * data);
-    void irq_handler(uint8_t data);
-    operator bool() {return (true);} // UART always active
+    RingBufferT();
+    bool put(T *value);
+    bool get(T *value);
+    bool peek(T *value);
+    void clear();
+	bool isEmpty();
+	bool isFull();
+    int available();
+	
   private:
-		RingBuffer rxBuffer;
+	int nextIndex(int index);
+    
+    int  _head;
+    int  _tail;
+    T    _buffer[size];
+    int  _bufferSize;
 };
 
-extern UARTClass Serial;
-#endif // _UART_CLASS_
+#endif /* __RING_BUFFER_T */

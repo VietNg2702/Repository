@@ -1,5 +1,12 @@
 {
     "files.associations": {
-        "pin.h": "c"
+        "pin.h": "c",
+        "arduino.h": "c",
+        "hardwareserial.h": "c",
+        "wstring.h": "c",
+        "wiring_pulse.h": "c",
+        "winterrupts.h": "c",
+        "variant.h": "c",
+        "wiring.h": "c"
     }
 }

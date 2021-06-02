@@ -16,37 +16,35 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef _UART_CLASS_
-#define _UART_CLASS_
+#ifndef _RING_BUFFER_
+#define _RING_BUFFER_
 
+#include <stdint.h>
 
-#include "HardwareSerial.h"
-#include "RingBuffer.h"
-#include "r_usart_cmsis_api.h"
-#include <cstddef>
+// Define constants and variables for buffering incoming serial data.  We're
+// using a ring buffer (I think), in which head is the index of the location
+// to which to write the next incoming character and tail is the index of the
+// location from which to read.
+#define SERIAL_BUFFER_SIZE 64
 
-#define USART_CH Driver_USART0
-
-extern ARM_DRIVER_USART USART_CH;
-
-class UARTClass : public HardwareSerial
+class RingBuffer
 {
   public:
-    UARTClass(uint8_t Tx_pin, uint8_t Rx_pin);
-    void begin(unsigned long dwBaudRate);
-    void end(void);
-    int available(void);
-    int availableForWrite(void);
-    int peek(void);
-    int read(void);
-    void flush(void);
-    size_t write(const uint8_t data);
-    size_t write(const char * data);
-    void irq_handler(uint8_t data);
-    operator bool() {return (true);} // UART always active
-  private:
-		RingBuffer rxBuffer;
-};
+    uint8_t _aucBuffer[SERIAL_BUFFER_SIZE] ;
+    int _iHead ;
+    int _iTail ;
 
-extern UARTClass Serial;
-#endif // _UART_CLASS_
+  public:
+    RingBuffer( void ) ;
+    void store_char( uint8_t c ) ;
+	void clear();
+	int read_char();
+	int available();
+	int peek();
+	bool isFull();
+	
+  private:
+	int nextIndex(int index);
+} ;
+
+#endif /* _RING_BUFFER_ */

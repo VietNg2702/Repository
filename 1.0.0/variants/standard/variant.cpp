@@ -99,3 +99,5 @@
 //       __IOM uint32_t PSEL       : 5;            /*!< [28..24] Peripheral Function Select                                       */
 //             uint32_t            : 3;
 //     } P409PFS_b;
+#include "variant.h"
+UARTClass Serial(6,8);
