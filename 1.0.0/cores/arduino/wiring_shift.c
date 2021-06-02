@@ -22,7 +22,8 @@
   $Id: wiring.c 248 2007-02-03 15:36:30Z mellis $
 */
 
-#include "wiring_private.h"
+#include "wiring_shift.h"
+#include "wiring_digital.h"
 
 uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder) {
 	uint32_t value = 0;

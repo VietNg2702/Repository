@@ -19,6 +19,7 @@
 #ifndef _WIRING_SHIFT_
 #define _WIRING_SHIFT_
 
+#include "wiring_constants.h"
  
 /*
  * \brief

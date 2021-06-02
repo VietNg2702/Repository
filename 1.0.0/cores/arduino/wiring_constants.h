@@ -19,7 +19,8 @@
 #ifndef _WIRING_CONSTANTS_
 #define _WIRING_CONSTANTS_
 
- 
+#include <stdbool.h>
+#include <stdint.h>
 
 #define HIGH 0x1
 #define LOW  0x0
