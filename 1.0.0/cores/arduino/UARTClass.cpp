@@ -21,67 +21,50 @@
 #include <string.h>
 #include "UARTClass.h"
 #include "variant.h"
+
 #include "r_system_api.h"
 #include "r_usart_cmsis_api.h"
+#include "usart.h"
 
-UARTClass Serial;
+
 
 
 // Public Methods //////////////////////////////////////////////////////////////
 
 void UARTClass::begin(unsigned long bauds)
 {
-  uint32_t freq_hz = 0;
-
-  /* Initialize the USART driver */
-  USART_CH.Initialize(my_sci_callback);
-
-  /* Power up the USART peripheral */
-  USART_CH.PowerControl(ARM_POWER_FULL);
-
-  /*Configure the USART */
-  R_SYS_SystemClockFreqGet(&freq_hz);
-
-  /* Set up the configuration data structure for asynchronous (UART) operation. */
-  USART_CH.Control(ARM_USART_MODE_ASYNCHRONOUS |
-                        ARM_USART_DATA_BITS_8 |
-                        ARM_USART_PARITY_NONE |
-                        ARM_USART_STOP_BITS_1 |
-                        ARM_USART_FLOW_CONTROL_NONE, bauds);
-
-  return;
+    usart_enable(bauds);
+    return;
 }
 
 
 void UARTClass::end(void)
 {
-   /* Power off the USART peripheral */
-    USART_CH.PowerControl(ARM_POWER_OFF);
-
-    /* Uninitialize the USART driver */
-    USART_CH.Uninitialize();
-
+    usart_disable();
     return;
 }
 
 
 int UARTClass::available(void)
 {
-    ARM_USART_STATUS status;
-    
-    status = USART_CH.GetStatus();
-    
-    return status.tx_busy;
+       
+    if(USART_CH.GetRxCount()>0)
+    {
+        return 1;
+    }
+
+    return 0;
 }
 
 
 int UARTClass::availableForWrite(void)
 {
-    ARM_USART_STATUS status;
+    if(USART_CH.GetTxCount()>0)
+    {
+        return 1;
+    }
     
-    status = USART_CH.GetStatus();
-    
-    return status.rx_busy;
+    return 0;
 }
 
 
@@ -94,8 +77,11 @@ int UARTClass::peek(void)
 
 int UARTClass::read(void)
 {
-  //TODO:
-  return (0);
+    int data;
+
+    USART_CH.Receive(&data, 1);
+    
+    return data;
 }
 
 
@@ -109,53 +95,4 @@ size_t UARTClass::write(const uint8_t uc_data)
 {
   //TODO:
   return (1);
-}
-
-void usart_callback(uint32_t event)
-{
-    switch (event)
-    {
-        case ARM_USART_EVENT_RECEIVE_COMPLETE:
-            if (0 == g_prog_mode)
-            {
-                if ('\r' == g_receive_buffer[g_current_received_data])
-                {
-                    g_detect_command_flag = 1;
-                    g_current_received_data = 0;
-                }
-                else
-                {
-                    g_current_received_data++;
-                }
-                if ((sizeof(g_receive_buffer)) == g_current_received_data)
-                {
-                    g_current_received_data = 0;
-                }
-                USART_CH.Receive(g_receive_buffer + g_current_received_data, 1);
-            }
-            else
-            {
-                g_detect_command_flag = 1;
-            }
-            break;
-        case ARM_USART_EVENT_RX_OVERFLOW:
-            __ASM volatile ("nop");
-            break;
-        case ARM_USART_EVENT_RX_TIMEOUT:
-            __ASM volatile ("nop");
-            break;
-        case ARM_USART_EVENT_RX_BREAK:
-            __ASM volatile ("nop");
-            break;
-        case ARM_USART_EVENT_RX_FRAMING_ERROR:
-            __ASM volatile ("nop");
-            break;
-        case ARM_USART_EVENT_RX_PARITY_ERROR:
-            __ASM volatile ("nop");
-            break;
-        default:
-            __ASM volatile ("nop");
-            break;
-    }
-    return;
 }

@@ -22,7 +22,6 @@
 
 #include "HardwareSerial.h"
 
-#define BUFFER_SIZE                (256)
 
 class UARTClass : public HardwareSerial
 {
@@ -38,12 +37,8 @@ class UARTClass : public HardwareSerial
     size_t write(const uint8_t c);
     using Print::write; // pull in write(str) and write(buf, size) from Print
 
-    operator bool() {return (true);}; // UART always active
-  protected:
-    uint32_t g_current_received_data = 0;
-    uint32_t g_prog_mode = 0;
-    volatile uint32_t g_detect_command_flag = 0;
-    uint8_t g_receive_buffer[BUFFER_SIZE] = {0};
+    operator bool() {return (true);} // UART always active
+
 };
 
 #endif // _UART_CLASS_

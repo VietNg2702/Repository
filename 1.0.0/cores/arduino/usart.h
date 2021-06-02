@@ -59,7 +59,7 @@ extern volatile uint32_t g_detect_command_flag;
  Exported global functions (to be accessed by other files)
  **********************************************************************************************************************/
 extern void usart_disable(void) ;
-extern void usart_enable(void) ;
+extern void usart_enable(unsigned long bauds) ;
 extern void usart_start_transmission(void) ;
 extern void usart_start_reception(uint8_t * p_data, uint32_t num) ;
 extern void usart_bussy(void) ;

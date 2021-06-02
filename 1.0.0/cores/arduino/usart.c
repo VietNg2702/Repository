@@ -83,7 +83,7 @@ End of function usart_disable
  * Arguments    : none
  * Return Value : none
  **********************************************************************************************************************/
-void usart_enable(void)
+void usart_enable(unsigned long bauds)
 {
     uint32_t freq_hz = 0;
 
@@ -101,7 +101,7 @@ void usart_enable(void)
                           ARM_USART_DATA_BITS_8 |
                           ARM_USART_PARITY_NONE |
                           ARM_USART_STOP_BITS_1 |
-                          ARM_USART_FLOW_CONTROL_NONE, 115200);
+                          ARM_USART_FLOW_CONTROL_NONE, bauds);
 
     return;
 }

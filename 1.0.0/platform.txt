@@ -15,7 +15,7 @@ compiler.c.flags=-std=gnu99 --specs=nosys.specs -mcpu=cortex-m0plus -march=armv6
 # Compile cpp files options
 compiler.cpp.cmd=arm-none-eabi-g++
 compiler.cpp.flags=-std=gnu++11 --specs=nosys.specs -mcpu=cortex-m0plus -march=armv6-m -mthumb -mlittle-endian -mfloat-abi=soft -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -g -Wno-narrowing
-#
+
 # Compile includes
 compiler.re01_include="-I{runtime.platform.path}/variants/standard" "-I{runtime.platform.path}/cores/arduino" "-I{runtime.platform.path}/cores/arduino/avr" "-I{runtime.platform.path}/cores/arduino/re01_256kb" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/Core/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/Driver/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/DSP_Lib/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/config" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/CMSIS_Driver/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Config" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Driver" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Driver/Include" 
 
@@ -40,8 +40,7 @@ compiler.size.cmd=arm-none-eabi-size
 
 # Compile linkscript
 compiler.ld.cmd=arm-none-eabi-ld
-compiler.ld.flags=-T "{runtime.platform.path}/cores/arduino/re01_256kb/script/RE01_256KB.ld"
-
+compiler.ld.flags=--specs=nosys.specs -mcpu=cortex-m0plus -march=armv6-m -mthumb -mlittle-endian -mfloat-abi=soft -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wno-narrowing -g -T "{runtime.platform.path}/cores/arduino/re01_256kb/script/RE01_256KB.ld"
 
 # Compile c files
 recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} {compiler.re01_include} "{source_file}" -c -o "{object_file}"
@@ -56,7 +55,7 @@ recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {compile
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} "{archive_file_path}" "{object_file}"
 
 # Combine gc-sections, archives, and objects
-recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" -std=gnu++11 --specs=nosys.specs -mcpu=cortex-m0plus -march=armv6-m -mthumb -mlittle-endian -mfloat-abi=soft -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wno-narrowing -g {compiler.ld.flags} -Xlinker --gc-sections -Wl,-Map={build.path}/{build.project_name}.map -o "{build.path}/{build.project_name}.elf" "-L{build.path}/{archive_file}" -Wl,--warn-common -Wl,--start-group {object_files} "{archive_file_path}"
+recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}"  {compiler.ld.flags} -Xlinker --gc-sections -Wl,-Map={build.path}/{build.project_name}.map -o "{build.path}/{build.project_name}.elf" "-L{build.path}/{archive_file}" -Wl,--warn-common {object_files} "{archive_file_path}"
 
 # Create bin
 recipe.objcopy.eep.pattern="{compiler.path}{compiler.elf2bin.cmd}" {compiler.elf2bin.flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"

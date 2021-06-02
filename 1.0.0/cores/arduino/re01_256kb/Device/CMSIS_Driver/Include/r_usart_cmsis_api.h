@@ -55,10 +55,6 @@
 /***********************************************************
 Includes <System Includes> , "Project Includes"
 ***********************************************************/
-#ifdef  __cplusplus
-extern "C"
-{
-#endif
 
 #include "RE01_256KB.h"
 #include "Pin.h"
@@ -455,10 +451,6 @@ __STATIC_FORCEINLINE void sci_disable_irq(IRQn_Type irq_num) // @suppress("Funct
 }/* End of function sci_disable_irq() */
 
 
-
-#ifdef  __cplusplus
-}
-#endif
 
 #endif /* R_USART_CMSIS_H */
 /******************************************************************************************************************//**
