@@ -26,43 +26,28 @@
  */
 
 #include "Arduino.h"
+#include "r_system_api.h"
 
+static volatile uint64_t uSeconds = 0;
 
-void calc_inv(uint32_t n, int_inverse * res)
+void SysTick_Handler( void )
 {
-  //TODO:
-}
-
-inline uint32_t divide32_using_inverse(uint32_t n, int_inverse *inv)
-{
-  //TODO:
-  return 0;
-}
-
-// Almost full-range 64/32 divide.
-// If divisor-1 has i bits, then the answer is exact for n of up to 64-i bits
-// e.g. for divisors up to a million, n can have up to 45 bits
-// On RV32IM with divide32_using_inverse inlines this uses 5 multiplies,
-// 33 instructions, zero branches, 3 loads, 0 stores.
-uint64_t divide64_using_inverse(uint64_t n, int_inverse *inv)
-{
-  //TODO:
-  return 0;
+	uSeconds++;
 }
 
 
 uint32_t millis()
 {
-  return 0;
+	return uSeconds/1000;
 }
 
 uint32_t  micros(void)
 {
-  return 0;
+	return uSeconds;
 }
 
 
 void delay(uint32_t dwMs)
 {
-  
+    R_SYS_SoftwareDelay(dwMs, SYSTEM_DELAY_UNITS_MILLISECONDS);
 }

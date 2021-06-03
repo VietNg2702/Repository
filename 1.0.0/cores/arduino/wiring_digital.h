@@ -19,7 +19,9 @@
 #ifndef _WIRING_DIGITAL_
 #define _WIRING_DIGITAL_
 
+#include "r_system_api.h"
 
+extern __IOM uint32_t *ARDUINO_DIGITAL_PINS[10];
 /**
  * \brief Configures the specified pin to behave either as an input or an output. See the description of digital pins for details.
  *

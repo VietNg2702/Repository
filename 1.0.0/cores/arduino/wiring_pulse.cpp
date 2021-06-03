@@ -17,7 +17,6 @@
 */
 
 #include "Arduino.h"
-//#include "wiring_private.h"
 
 
 /* Measures the length (in microseconds) of a pulse on the pin; state is HIGH

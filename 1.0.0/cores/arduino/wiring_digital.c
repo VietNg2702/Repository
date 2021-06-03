@@ -1,6 +1,6 @@
 #include "variant.h"
 #include "wiring_digital.h"
-#include "r_system_api.h"
+
 
 __IOM uint32_t *ARDUINO_DIGITAL_PINS[10]={
     ARDUINO_IO0_RXD5_B,

@@ -22,6 +22,8 @@
 #define ARDUINO_MAIN
 #include "Arduino.h"
 #include "re01_core.h"
+#include "core_cm0plus.h"
+
 /***********************************************************************************************************************
 * Function Name: main
 * Revision     : 1.00
@@ -33,6 +35,7 @@ int main()
 {
   
     re01_core_init();
+    SysTick_Config(SystemCoreClock / 1000000L);
 /*******************************************************************/
 /**** Write user code for user init and system operations here. ****/
 /*******************************************************************/

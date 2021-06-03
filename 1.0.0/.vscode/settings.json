@@ -9,6 +9,7 @@
         "variant.h": "c",
         "wiring.h": "c",
         "pins_arduino.h": "c",
-        "wiring_digital.h": "c"
+        "wiring_digital.h": "c",
+        "r_dtc_api.h": "c"
     }
 }

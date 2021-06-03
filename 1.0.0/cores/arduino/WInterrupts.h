@@ -21,7 +21,7 @@
 
 #include <stdint.h>
 
- 
+typedef void (*interrupt_handle_t)( void ) ;
 
 //      LOW 0
 //      HIGH 1
@@ -32,17 +32,12 @@
 #define DEFAULT 1
 #define EXTERNAL 0
 
-#define digitalPinToInterrupt(P) (INT_GPIO_BASE + variant_pin_map[P].bit_pos) 
-
-  typedef void (*voidFuncPtr)(void);
-
-
-void attachInterrupt(uint32_t intnum, voidFuncPtr callback, uint32_t mode);
+void attachInterrupt(uint32_t pin, interrupt_handle_t callback, uint32_t mode);
 
 /*
  * \brief Turns off the given interrupt.
  */
-void detachInterrupt(uint32_t intnum);
+void detachInterrupt(uint32_t pin);
 
   
 
