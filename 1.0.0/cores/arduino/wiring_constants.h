@@ -22,8 +22,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define HIGH 0x1
-#define LOW  0x0
+#define LOW 0
+#define HIGH 1
 
 #define INPUT 0x0
 #define OUTPUT 0x1
@@ -43,12 +43,6 @@ enum BitOrder {
 	LSBFIRST = 0,
 	MSBFIRST = 1
 };
-
-//      LOW 0
-//      HIGH 1
-#define CHANGE 2
-#define FALLING 3
-#define RISING 4
 
 #define DEFAULT 1
 #define EXTERNAL 0

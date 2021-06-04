@@ -20,51 +20,6 @@
 #ifndef _WIRING_
 #define _WIRING_
 
-
-/**
- *
- */
-extern void initVariant( void ) ;
-extern void init( void ) ;
-
-struct variant_pin_map_s {
-  uint8_t io_port;
-  uint8_t bit_pos;
-  uint8_t pwm_num;
-  uint8_t pwm_cmp_num;
-};
-
-extern const struct variant_pin_map_s variant_pin_map[];
-extern const uint32_t variant_pin_map_size;
-
-extern const volatile void* variant_pwm[];
-extern const uint32_t variant_pwm_size;
-
-typedef struct {
-  uint32_t n;
-  uint32_t mult;
-  uint32_t shift;
-} int_inverse ;
-
-extern int_inverse f_cpu_1000_inv;
-extern int_inverse f_cpu_1000000_inv;
-
-void calc_inv(uint32_t n, int_inverse * res);
-
-uint32_t divide32_using_inverse(uint32_t n, int_inverse *inv);
-uint64_t divide64_using_inverse(uint64_t n, int_inverse *inv);
-
-#define rdmcycle(x)  {				       \
-    uint32_t lo, hi, hi2;			       \
-    __asm__ __volatile__ ("1:\n\t"		       \
-			  "csrr %0, mcycleh\n\t"       \
-			  "csrr %1, mcycle\n\t"	       \
-			  "csrr %2, mcycleh\n\t"       \
-			  "bne  %0, %2, 1b\n\t"			\
-			  : "=r" (hi), "=r" (lo), "=r" (hi2)) ;	\
-    *(x) = lo | ((uint64_t) hi << 32); 				\
-  }
-
 /**
  * \brief Returns the number of milliseconds since the board began running the current program.
  *

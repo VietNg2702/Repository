@@ -23,16 +23,15 @@
 
 typedef void (*interrupt_handle_t)( void ) ;
 
-//      LOW 0
-//      HIGH 1
-#define CHANGE 2
-#define FALLING 3
-#define RISING 4
+typedef enum{
+  LOW_EDGE = 0x00,
+  FALLING_EDGE,
+  RISING_EDGE,
+  CHANGE_EDGE
+}interrupt_mode_t;
 
-#define DEFAULT 1
-#define EXTERNAL 0
 
-void attachInterrupt(uint32_t pin, interrupt_handle_t callback, uint32_t mode);
+void attachInterrupt(uint32_t pin, interrupt_handle_t callback, interrupt_mode_t mode);
 
 /*
  * \brief Turns off the given interrupt.

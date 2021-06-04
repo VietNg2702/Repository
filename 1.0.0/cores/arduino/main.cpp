@@ -36,6 +36,7 @@ int main()
   
     re01_core_init();
     SysTick_Config(SystemCoreClock / 1000000L);
+    
 /*******************************************************************/
 /**** Write user code for user init and system operations here. ****/
 /*******************************************************************/

@@ -35,7 +35,6 @@ void SysTick_Handler( void )
 	uSeconds++;
 }
 
-
 uint32_t millis()
 {
 	return uSeconds/1000;

@@ -23,38 +23,38 @@ typedef struct {
     } PxxPFS_b_t;
 
 //Flash Memory Pins
-#define QSPI_QSSL_A				(uint32_t*)(&(PFS->P807PFS_b)) //6 //P807
-#define QSPI_QIO1_A				(uint32_t*)(&(PFS->P810PFS_b)) //3 //P810
-#define QSPI_QIO2_A				(uint32_t*)(&(PFS->P809PFS_b)) //4 //P809
-#define QSPI_QIO0_A				(uint32_t*)(&(PFS->P811PFS_b)) //2 //P811
-#define QSPI_QSPCLK_A			(uint32_t*)(&(PFS->P812PFS_b)) //1 //P812
-#define QSPI_QIO3_A				(uint32_t*)(&(PFS->P808PFS_b)) //5 //P808
+#define QSPI_QSSL_A				(uint32_t*)(&(PFS->P807PFS_b)) //6 //P807 //IRQ6_A
+#define QSPI_QIO1_A				(uint32_t*)(&(PFS->P810PFS_b)) //3 //P810 //IRQ5_B
+#define QSPI_QIO2_A				(uint32_t*)(&(PFS->P809PFS_b)) //4 //P809 //IRQ6_B
+#define QSPI_QIO0_A				(uint32_t*)(&(PFS->P811PFS_b)) //2 //P811 //None
+#define QSPI_QSPCLK_A			(uint32_t*)(&(PFS->P812PFS_b)) //1 //P812 //None
+#define QSPI_QIO3_A				(uint32_t*)(&(PFS->P808PFS_b)) //5 //P808 //IRQ2_B
 
 //Arduino Pins
-#define ARDUINO_IO8				(uint32_t*)(&(PFS->P409PFS_b)) //18 //P409
-#define ARDUINO_IO9_GTIOC2A_B 	(uint32_t*)(&(PFS->P302PFS_b)) //48 //P302
-#define ARDUINO_SSLA1_B			(uint32_t*)(&(PFS->P015PFS_b)) //92 //P015
-#define ARDUINO_MOSIA_B			(uint32_t*)(&(PFS->P010PFS_b)) //97 //P010
-#define ARDUINO_MISOA_B			(uint32_t*)(&(PFS->P805PFS_b)) //98 //P805
-#define ARDUINO_RSPCKA_B		(uint32_t*)(&(PFS->P011PFS_b)) //96 //P011
-#define ARDUINO_SDA0			(uint32_t*)(&(PFS->P012PFS_b)) //95 //P012
-#define ARDUINO_SCL0			(uint32_t*)(&(PFS->P013PFS_b)) //94 //P013
+#define ARDUINO_IO8				(uint32_t*)(&(PFS->P409PFS_b)) //18 //P409 //IRQ9_B
+#define ARDUINO_IO9_GTIOC2A_B 	(uint32_t*)(&(PFS->P302PFS_b)) //48 //P302 //None
+#define ARDUINO_SSLA1_B			(uint32_t*)(&(PFS->P015PFS_b)) //92 //P015 //IRQ5_A
+#define ARDUINO_MOSIA_B			(uint32_t*)(&(PFS->P010PFS_b)) //97 //P010 //None
+#define ARDUINO_MISOA_B			(uint32_t*)(&(PFS->P815PFS_b)) //98 //P815 //None
+#define ARDUINO_RSPCKA_B		(uint32_t*)(&(PFS->P011PFS_b)) //96 //P011 //None
+#define ARDUINO_SDA0			(uint32_t*)(&(PFS->P012PFS_b)) //95 //P012 //None
+#define ARDUINO_SCL0			(uint32_t*)(&(PFS->P013PFS_b)) //94 //P013 //None
 
-#define ARDUINO_IO0_RXD5_B		(uint32_t*)(&(PFS->P314PFS_b)) //45 //P314
-#define ARDUINO_IO1_TXD5_B		(uint32_t*)(&(PFS->P315PFS_b)) //44 //P315
-#define ARDUINO_IO2_IRQ7_B		(uint32_t*)(&(PFS->P204PFS_b)) //36 //P204
-#define ARDUINO_IO3_IRQ8_C		(uint32_t*)(&(PFS->P205PFS_b)) //35 //P205
-#define ARDUINO_IO4				(uint32_t*)(&(PFS->P602PFS_b)) //53 //P602
-#define ARDUINO_IO5_GTIOC5A_B	(uint32_t*)(&(PFS->P603PFS_b)) //52 //P603
-#define ARDUINO_IO6_GTIOC5B_B	(uint32_t*)(&(PFS->P604PFS_b)) //51 //P604
-#define ARDUINO_IO7				(uint32_t*)(&(PFS->P300PFS_b)) //50 //P300
+#define ARDUINO_IO0_RXD5_B		(uint32_t*)(&(PFS->P314PFS_b)) //45 //P314 //None
+#define ARDUINO_IO1_TXD5_B		(uint32_t*)(&(PFS->P315PFS_b)) //44 //P315 //None
+#define ARDUINO_IO2_IRQ7_B		(uint32_t*)(&(PFS->P204PFS_b)) //36 //P204 //IRQ7_B
+#define ARDUINO_IO3_IRQ8_C		(uint32_t*)(&(PFS->P205PFS_b)) //35 //P205 //IRQ8_C
+#define ARDUINO_IO4				(uint32_t*)(&(PFS->P602PFS_b)) //53 //P602 //None
+#define ARDUINO_IO5_GTIOC5A_B	(uint32_t*)(&(PFS->P603PFS_b)) //52 //P603 //None
+#define ARDUINO_IO6_GTIOC5B_B	(uint32_t*)(&(PFS->P604PFS_b)) //51 //P604 //IRQ3_C
+#define ARDUINO_IO7				(uint32_t*)(&(PFS->P300PFS_b)) //50 //P300 //None
 
-#define ARDUINO_AN000			(uint32_t*)(&(PFS->P000PFS_b)) //89 //P000
-#define ARDUINO_AN001			(uint32_t*)(&(PFS->P001PFS_b)) //88 //P001
-#define ARDUINO_AN002			(uint32_t*)(&(PFS->P002PFS_b)) //87 //P002
-#define ARDUINO_AN003			(uint32_t*)(&(PFS->P003PFS_b)) //86 //P003
-#define ARDUINO_AN004			(uint32_t*)(&(PFS->P004PFS_b)) //85 //P004
-#define ARDUINO_AN005			(uint32_t*)(&(PFS->P005PFS_b)) //82 //P005
+#define ARDUINO_AN000			(uint32_t*)(&(PFS->P000PFS_b)) //89 //P000 //None
+#define ARDUINO_AN001			(uint32_t*)(&(PFS->P001PFS_b)) //88 //P001 //None
+#define ARDUINO_AN002			(uint32_t*)(&(PFS->P002PFS_b)) //87 //P002 //None
+#define ARDUINO_AN003			(uint32_t*)(&(PFS->P003PFS_b)) //86 //P003 //None
+#define ARDUINO_AN004			(uint32_t*)(&(PFS->P004PFS_b)) //85 //P004 //None
+#define ARDUINO_AN005			(uint32_t*)(&(PFS->P005PFS_b)) //82 //P005 //None
 
 
 #endif
