@@ -50,9 +50,9 @@
             ]
         },
         {
-          "name": "openocd",
-          "version": "0.10.0-arduino13",
-          "systems": [
+            "name": "openocd",
+            "version": "0.10.0-arduino13",
+            "systems": [
             {
               "size": "2334654",
               "checksum": "SHA-256:2f3b87c644569f47780b16b071cd0929a64a8899ec769f4ca7480d20d5503365",
@@ -60,8 +60,8 @@
               "archiveFileName": "openocd-0.10.0-arduino13-static-i686-w64-mingw32.zip",
               "url": "http://downloads.arduino.cc/tools/openocd-0.10.0-arduino13-static-i686-w64-mingw32.zip"
             }
-          ]
-        },
+            ]
+        }
       ]
     }
     ]
