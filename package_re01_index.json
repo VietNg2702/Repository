@@ -29,7 +29,7 @@
             },
             {
               "packager": "renesas-re", 
-              "version": "20210519", 
+              "version": "0.10.0-arduino13", 
               "name": "openocd"
             }
           ]
@@ -50,18 +50,18 @@
             ]
         },
         {
-          "version": "20210519",
           "name": "openocd",
+          "version": "0.10.0-arduino13",
           "systems": [
-          {
-            "host": "i686-mingw32",
-            "url": "https://sysprogs.com/getfile/1515/openocd-20210519.7z",
-            "archiveFileName": "openocd-20210519.7z",
-            "size": "8212126"
-          }
+            {
+              "size": "2334654",
+              "checksum": "SHA-256:2f3b87c644569f47780b16b071cd0929a64a8899ec769f4ca7480d20d5503365",
+              "host": "i686-mingw32",
+              "archiveFileName": "openocd-0.10.0-arduino13-static-i686-w64-mingw32.zip",
+              "url": "http://downloads.arduino.cc/tools/openocd-0.10.0-arduino13-static-i686-w64-mingw32.zip"
+            }
           ]
-      }
-
+        },
       ]
     }
     ]
