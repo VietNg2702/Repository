@@ -57,7 +57,6 @@
             "host": "i686-mingw32",
             "url": "https://sysprogs.com/getfile/1515/openocd-20210519.7z",
             "archiveFileName": "openocd-20210519.7z",
-            "checksum": "SHA256:737e94c252d56e72249f281ad851a31a56ca7e40f886bd5e9ae86a3c8b87746e",
             "size": "8212126"
           }
           ]
