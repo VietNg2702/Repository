@@ -12,7 +12,7 @@ MEMORY
   /* The e2studio trace buffer requires 0x400 bytes of RAM starting at address 0x20000000. Those have been allocated above.
    * If trace is not used then these 0x400 bytes can be used by the application by changing the below RAM ORIGIN to 0x20000000,
    * increasing the LENGTH by 0x400 and removing the E2S_TRACE_BUF definition. */
-  RAM (rwx)          : ORIGIN = 0x20000000, LENGTH = 0x0020000//0x001FC00  /* 127K */
+  RAM (rwx)          : ORIGIN = 0x20000400, LENGTH = 0x001FC00  /* 127K */
   QSPI_FLASH (rx)    : ORIGIN = 0x60000000, LENGTH = 0x8000000  /* 128M */
 }
 
