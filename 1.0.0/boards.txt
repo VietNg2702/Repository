@@ -8,3 +8,14 @@ ek_re01_256kb.build.variant=standard
 ek_re01_256kb.build.core=arduino
 ek_re01_256kb.build.board=EK_RE01_256KB 
 ek_re01_256kb.build.boardenv=ek-re01-256kb
+
+ek_re01_256kb.upload.tool=avrdude
+ek_re01_256kb.upload.protocol=avrisp
+ek_re01_256kb.upload.speed=115200
+
+ek_re01_256kb.bootloader.tool=openocd
+
+# Limit is the 64KB
+ek_re01_256kb.upload.maximum_size=65536
+#ek_re01_256kb.build.ldscript
+#ek_re01_256kb.build.openocdcfg
