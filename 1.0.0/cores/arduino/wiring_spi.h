@@ -5,16 +5,16 @@
 #include <stdbool.h>
 #include "r_spi_cmsis_api.h"
 
-void spi0_initialize(void);
+extern ARM_DRIVER_SPI Driver_SPI0;
+#define SPI0 = &Driver_SPI0;
+extern ARM_DRIVER_SPI Driver_SPI1;
+#define SPI1 = &Driver_SPI1;
 
-void spi0_receive(uint8_t *data, uint8_t size);
+void spi_initialize(ARM_DRIVER_SPI *SPI);
 
-void spi0_send(uint8_t *data, uint8_t size);
+void spi_receive(ARM_DRIVER_SPI *SPI, uint8_t *data, uint8_t size);
 
-void spi1_initialize(void);
+void spi_send(ARM_DRIVER_SPI *SPI, uint8_t *data, uint8_t size);
 
-void spi1_receive(uint8_t *data, uint8_t size);
-
-void spi1_send(uint8_t *data, uint8_t size);
-
+void spi_transfer(ARM_DRIVER_SPI *SPI, uint8_t *in_data, uint8_t *out_data, uint8_t size);
 #endif

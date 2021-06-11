@@ -101,6 +101,10 @@ typedef struct
 #define PROPERTY_DISABLE                (0U)
 #define PROPERTY_ENABLE                 (1U)
 
+#define LIS3DH_WRITE                      0
+#define LIS3DH_READ                       0x80
+#define LIS3DH_MS                         0x40
+
 /** @addtogroup  Interfaces_Functions
   * @brief       This section provide a set of functions used to read and
   *              write a generic register of the device.
