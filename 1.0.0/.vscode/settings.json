@@ -10,6 +10,7 @@
         "wiring.h": "c",
         "pins_arduino.h": "c",
         "wiring_digital.h": "c",
-        "r_dtc_api.h": "c"
+        "r_dtc_api.h": "c",
+        "hdc2010.h": "c"
     }
 }
