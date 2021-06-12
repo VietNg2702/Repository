@@ -1,7 +1,5 @@
-extern "C" {
-#include "wiring_i2c.h"
-#include "hdc2010.h"
-}
+#include <wiring_i2c.h>
+#include <hdc2010.h>
 
 static hdc2010_i2c_handle_t i2c_handle;
 
