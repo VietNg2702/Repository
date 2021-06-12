@@ -27,17 +27,17 @@ static int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp,
   uint8_t address = LIS3DH_WRITE | reg;
 
   spi_send((ARM_DRIVER_SPI*)handle, &address, 1);
-  spi_send((ARM_DRIVER_SPI*)handle, (uint8_t )bufp, len);
+  spi_send((ARM_DRIVER_SPI*)handle, (uint8_t *)bufp, len);
 
   return 0;
 }
 
 
 void setup() {
-  spi_initialize(SPI0);
+  spi_initialize((ARM_DRIVER_SPI *)ARDUINO_SPI0);
   dev_ctx.write_reg = platform_write;
   dev_ctx.read_reg = platform_read;
-  dev_ctx.handle = SPI0;
+  dev_ctx.handle = (void *)ARDUINO_SPI0;
   
   /* Check device ID */
   lis3dh_device_id_get(&dev_ctx, &whoamI);

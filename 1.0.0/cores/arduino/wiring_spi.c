@@ -1,4 +1,9 @@
-#include "wriring_spi.h"
+#include "wiring_spi.h"
+
+extern ARM_DRIVER_SPI Driver_SPI0;
+ARM_DRIVER_SPI *ARDUINO_SPI0 = &Driver_SPI0;
+extern ARM_DRIVER_SPI Driver_SPI1;
+ARM_DRIVER_SPI *ADUINO_SPI1 = &Driver_SPI1;
 
 /***********************************************************************************************************************
 Macros
@@ -19,7 +24,7 @@ static void spi_callback(uint32_t event)
     }
 }   /* End of function spi1_callback() */
 
-void spi_initialize(ARM_DRIVER_SPI *SPI);
+void spi_initialize(ARM_DRIVER_SPI *SPI)
 {
     /** Initialization the SPI module */
     /** SPI0 setting. */

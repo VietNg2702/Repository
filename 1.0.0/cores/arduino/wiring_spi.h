@@ -5,10 +5,8 @@
 #include <stdbool.h>
 #include "r_spi_cmsis_api.h"
 
-extern ARM_DRIVER_SPI Driver_SPI0;
-#define SPI0 = &Driver_SPI0;
-extern ARM_DRIVER_SPI Driver_SPI1;
-#define SPI1 = &Driver_SPI1;
+extern ARM_DRIVER_SPI *ARDUINO_SPI0;
+extern ARM_DRIVER_SPI *ARDUINO_SPI1;
 
 void spi_initialize(ARM_DRIVER_SPI *SPI);
 
