@@ -16,8 +16,8 @@
           "category": "renesas re family",
           "url": "https://github.com/VietNg2702/Repository/blob/main/RE01_100.zip?raw=true",
           "archiveFileName": "RE01_100.zip",
-          "checksum": "SHA-256:ee382c13ae1c944c3252cd5a343a47b56b694a868aef8dd5ffab3c3f0fc612a5",
-          "size": "2487923",
+          "checksum": "SHA-256:a5b80ae1ca1439bb812ec9aed49a81f3ad4258e7337b99eea19b7169c215640d",
+          "size": "2488004",
           "boards": [
             {"name": "EK-RE01-256KB"}
           ],

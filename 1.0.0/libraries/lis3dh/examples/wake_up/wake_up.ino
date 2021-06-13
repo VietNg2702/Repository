@@ -1,4 +1,5 @@
-#include "lis3dh.h"
+#include <Arduino.h>
+#include <lis3dh.h>
 
 /* Private variables ---------------------------------------------------------*/
 static uint8_t whoamI;

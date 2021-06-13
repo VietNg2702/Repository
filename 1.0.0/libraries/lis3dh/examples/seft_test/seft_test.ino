@@ -1,4 +1,5 @@
-#include "lis3dh.h"
+#include <Arduino.h>
+#include <lis3dh.h>
 
 /* Private macro -------------------------------------------------------------*/
 /* Self test limits converted from 10bit right-aligned to 16bit left-aligned. */

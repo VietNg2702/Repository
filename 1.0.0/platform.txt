@@ -17,7 +17,7 @@ compiler.cpp.cmd=arm-none-eabi-g++
 compiler.cpp.flags=-std=gnu++11 --specs=nosys.specs -mcpu=cortex-m0plus -march=armv6-m -mthumb -mlittle-endian -mfloat-abi=soft -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -g -Wno-narrowing
 
 # Compile includes
-compiler.re01_include="-I{runtime.platform.path}/variants/standard" "-I{runtime.platform.path}/cores/arduino" "-I{runtime.platform.path}/cores/arduino/avr" "-I{runtime.platform.path}/cores/arduino/re01_256kb" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/Core/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/Driver/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/DSP_Lib/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/config" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/CMSIS_Driver/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Config" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Driver" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Driver/Include" 
+compiler.re01_include="-I{build.system.path}/include" "-I{runtime.platform.path}/variants/standard" "-I{runtime.platform.path}/cores/arduino" "-I{runtime.platform.path}/cores/arduino/avr" "-I{runtime.platform.path}/cores/arduino/re01_256kb" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/Core/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/Driver/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/CMSIS/DSP_Lib/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/config" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/CMSIS_Driver/Include" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Config" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Driver" "-I{runtime.platform.path}/cores/arduino/re01_256kb/Device/Driver/Include" 
 
 # Create archives options
 compiler.ar.cmd=arm-none-eabi-ar
@@ -43,13 +43,13 @@ compiler.ld.cmd=arm-none-eabi-ld
 compiler.ld.flags=--specs=nosys.specs -mcpu=cortex-m0plus -march=armv6-m -mthumb -mlittle-endian -mfloat-abi=soft -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wno-narrowing -g -T "{runtime.platform.path}/cores/arduino/re01_256kb/script/RE01_256KB.ld"
 
 # Compile c files
-recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} {compiler.re01_include} "{source_file}" -c -o "{object_file}"
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} {compiler.re01_include} {includes} "{source_file}" -c -o "{object_file}"
 
 # Compile c++ files
-recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {compiler.re01_include} "{source_file}" -c -o "{object_file}"
+recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {compiler.re01_include} {includes} "{source_file}" -c -o "{object_file}"
 
 # Compile S files
-recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {compiler.re01_include} "{source_file}" -c -o "{object_file}"
+recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {compiler.re01_include} {includes} "{source_file}" -c -o "{object_file}"
 
 # Create archives
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} "{archive_file_path}" "{object_file}"

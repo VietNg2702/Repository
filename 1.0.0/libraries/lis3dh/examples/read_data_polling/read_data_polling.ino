@@ -1,4 +1,5 @@
-#include "lis3dh.h"
+#include <Arduino.h>
+#include <lis3dh.h>
 
 /* Private variables ---------------------------------------------------------*/
 static int16_t data_raw_acceleration[3];
