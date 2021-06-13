@@ -1,7 +1,4 @@
-extern "C" {
 #include "lis3dh.h"
-#include "wiring_spi.h"
-}
 
 /* Private variables ---------------------------------------------------------*/
 static uint8_t whoamI;

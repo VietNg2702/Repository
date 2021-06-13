@@ -1,8 +1,4 @@
-extern "C" {
 #include "lis3dh.h"
-#include "wiring_spi.h"
-#include "wiring.h"
-}
 
 /* Private macro -------------------------------------------------------------*/
 /* Self test limits converted from 10bit right-aligned to 16bit left-aligned. */

@@ -68,6 +68,7 @@ extern void loop( void ) ;
 #include "wiring_analog.h"
 #include "wiring_shift.h"
 #include "WInterrupts.h"
-
+#include "wiring_i2c.h"
+#include "wiring_spi.h"
 
 #endif // Arduino_h

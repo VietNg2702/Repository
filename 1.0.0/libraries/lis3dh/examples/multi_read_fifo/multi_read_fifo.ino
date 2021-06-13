@@ -1,7 +1,4 @@
-extern "C" {
 #include "lis3dh.h"
-#include "wiring_spi.h"
-}
 
 /* Private variables ---------------------------------------------------------*/
 static int16_t data_raw_acceleration[3];
