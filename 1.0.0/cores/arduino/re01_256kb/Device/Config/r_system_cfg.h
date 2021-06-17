@@ -100,6 +100,8 @@ Configuration Options
  *       than those peripheral Transmit and Receive Handlers.
  **********************************************************************************************************************/
 /* @{ */
+#define SYSTEM_CFG_EVENT_NUMBER_AGTW0_AGTI          (SYSTEM_IRQ_EVENT_NUMBER24)  /*!< Numbers 0/8/16/24 only */
+
 #define SYSTEM_CFG_EVENT_NUMBER_PORT_IRQ0           (SYSTEM_IRQ_EVENT_NUMBER_NOT_USED)  /*!< Numbers 0/4/8/12/16/20/24/28 only */
 #define SYSTEM_CFG_EVENT_NUMBER_DMAC0_INT           (SYSTEM_IRQ_EVENT_NUMBER0)  /*!< Numbers 0/4/8/12/16/20/24/28 only */
 #define SYSTEM_CFG_EVENT_NUMBER_DTC_COMPLETE        (SYSTEM_IRQ_EVENT_NUMBER_NOT_USED)  /*!< Numbers 0/4/8/12/16/20/24/28 only */

@@ -63,6 +63,8 @@ Includes <System Includes> , "Project Includes"
 #include "r_system_api.h"
 #include "r_system_cfg.h"
 #include "r_lpm_api.h"
+
+
 #if (SPI_PRV_USED_DMAC_DRV != 0)
 
 /* Using the DMAC driver */
@@ -249,6 +251,11 @@ typedef struct {
 #define FUNC_LOCATION_ARM_SPI_GET_STATUS
 #endif
 
+#ifdef  __cplusplus
+extern "C"
+{
+#endif
+
 ARM_DRIVER_VERSION ARM_SPI_GetVersion(void) FUNC_LOCATION_ARM_SPI_GET_VERSION;
 ARM_SPI_CAPABILITIES ARM_SPI_GetCapabilities(void) FUNC_LOCATION_ARM_SPI_GET_CAPABILITIES;
 int32_t ARM_SPI_Initialize(ARM_SPI_SignalEvent_t cb_event, st_spi_resources_t * const p_spi) 
@@ -306,6 +313,10 @@ __STATIC_FORCEINLINE void spi_bit_set_16(uint16_t * const p_reg, uint8_t bit) //
 {
   (*p_reg) |= (1 << bit);
 }/* End of function spi_bit_set_16() */
+
+#ifdef  __cplusplus
+}
+#endif
 
 #endif /* R_SPI_CMSIS_H */
 

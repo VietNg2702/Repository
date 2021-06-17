@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "lr1110_hal.h": "c",
+        "lr1110_gnss.h": "c",
+        "lr1110_gnss_types.h": "c",
+        "lr1110_radio.h": "c",
+        "lr1110_system_types.h": "c",
+        "lr1110_system.h": "c",
+        "lr1110_types.h": "c",
+        "lr1110_wifi.h": "c"
+    }
+}

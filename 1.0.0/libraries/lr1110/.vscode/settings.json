@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "system_gpio.h": "c",
+        "configuration.h": "c",
+        "system_i2c.h": "c",
+        "system_rtc.h": "c",
+        "system_spi.h": "c"
+    }
+}

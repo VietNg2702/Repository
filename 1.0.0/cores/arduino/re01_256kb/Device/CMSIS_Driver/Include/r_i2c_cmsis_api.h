@@ -63,11 +63,6 @@
 #include "r_system_cfg.h"
 #include "r_lpm_api.h"
 
-#ifdef  __cplusplus
-extern "C"
-{
-#endif
-
 /******************************************************************************
  Macro definitions
  *****************************************************************************/
@@ -197,6 +192,11 @@ typedef struct
     system_int_cb_t         rxi_callback;
     system_int_cb_t         eei_callback;
 } const st_i2c_resources_t;            
+
+#ifdef  __cplusplus
+extern "C"
+{
+#endif
 
 /*******************************************************************************************************************//**
  * @} (end defgroup grp_cmsis_drv_impl_iic)
