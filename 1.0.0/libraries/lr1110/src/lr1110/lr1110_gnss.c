@@ -34,10 +34,10 @@
  * --- DEPENDENCIES ------------------------------------------------------------
  */
 
-#include "../system/inc/system.h"
 #include "lr1110_gnss.h"
 #include "lr1110_regmem.h"
 #include "lr1110_hal.h"
+
 /*
  * -----------------------------------------------------------------------------
  * --- PRIVATE MACROS-----------------------------------------------------------
@@ -96,6 +96,12 @@
  * -----------------------------------------------------------------------------
  * --- PRIVATE TYPES -----------------------------------------------------------
  */
+
+static lr1110_status_t lr1110_gnss_get_almanac_address_size( const void* context, uint32_t* memory, uint16_t* size );
+
+/*!
+ * @brief Operating codes for GNSS-related operations
+ */
 enum
 {
     LR1110_GNSS_SET_CONSTALLATION_OC            = 0x0400,  //!< set the constellation to use
@@ -129,16 +135,6 @@ enum
  * --- PRIVATE VARIABLES -------------------------------------------------------
  */
 
-/*!
- * @brief Raw Payload update from the GNSS DMC
- */
-uint8_t lr1110_gnss_update_payload_from_dmc_raw_buffer[LR1110_GNSS_MAX_SIZE_ARRAY];  // define size
-
-/*!
- * @brief almanac date
- */
-uint16_t almanac_date;  //!< update : when almanac update
-
 /*
  * -----------------------------------------------------------------------------
  * --- PRIVATE FUNCTIONS DECLARATION -------------------------------------------
@@ -147,9 +143,13 @@ uint16_t almanac_date;  //!< update : when almanac update
 /*!
  * @brief Helper function that convert an array of uint8_t into a uint32_t single value
  *
- * @warning It is up to the caller to ensuer that value points to an array of at least sizeof(uint32_t) elements.
+ * @warning It is up to the caller to ensure that value points to an array of at least sizeof(uint32_t) elements.
+ *
+ * @param [in] value Array of uint8_t to be translated into a uint32_t
+ *
+ * @returns 32-bit value
  */
-static uint32_t lr1110_gnss_uint8_to_uint32( uint8_t* value );
+static uint32_t lr1110_gnss_uint8_to_uint32( uint8_t value[4] );
 
 /*
  * -----------------------------------------------------------------------------
@@ -174,7 +174,8 @@ lr1110_status_t lr1110_gnss_get_result_size( const void* context, uint16_t* resu
     return ( lr1110_status_t ) hal_status;
 }
 
-lr1110_status_t lr1110_gnss_read_results( const void* context, uint8_t* result_buffer, const uint16_t result_buffer_size )
+lr1110_status_t lr1110_gnss_read_results( const void* context, uint8_t* result_buffer,
+                                          const uint16_t result_buffer_size )
 {
     uint8_t cbuffer[LR1110_GNSS_SCAN_READ_RES_CMD_LENGTH] = { ( uint8_t )( LR1110_GNSS_SCAN_READ_RES_OC >> 8 ),
                                                               ( uint8_t )( LR1110_GNSS_SCAN_READ_RES_OC >> 0 ) };
@@ -195,7 +196,8 @@ lr1110_status_t lr1110_gnss_get_timings( const void* context, lr1110_gnss_timing
     return ( lr1110_status_t ) hal_status;
 }
 
-lr1110_status_t lr1110_gnss_one_satellite_almanac_update( const void* context, const lr1110_gnss_almanac_single_satellite_update_bytestram_t bytestream )
+lr1110_status_t lr1110_gnss_one_satellite_almanac_update(
+    const void* context, const lr1110_gnss_almanac_single_satellite_update_bytestream_t bytestream )
 {
     uint8_t cbuffer[LR1110_GNSS_ALMANAC_FULL_UPDATE_CMD_LENGTH] = {
         ( uint8_t )( LR1110_GNSS_ALMANAC_FULL_UPDATE_OC >> 8 ), ( uint8_t )( LR1110_GNSS_ALMANAC_FULL_UPDATE_OC >> 0 )
@@ -205,7 +207,8 @@ lr1110_status_t lr1110_gnss_one_satellite_almanac_update( const void* context, c
                                                  bytestream, LR1110_GNSS_SINGLE_ALMANAC_WRITE_SIZE );
 }
 
-lr1110_status_t lr1110_gnss_almanac_full_update( const void* context, const lr1110_gnss_almanac_full_update_bytestream_t almanac_bytestream )
+lr1110_status_t lr1110_gnss_almanac_full_update( const void*                                        context,
+                                                 const lr1110_gnss_almanac_full_update_bytestream_t almanac_bytestream )
 {
     uint8_t cbuffer[LR1110_GNSS_ALMANAC_FULL_UPDATE_CMD_LENGTH] = {
         ( uint8_t )( LR1110_GNSS_ALMANAC_FULL_UPDATE_OC >> 8 ), ( uint8_t )( LR1110_GNSS_ALMANAC_FULL_UPDATE_OC >> 0 )
@@ -224,7 +227,6 @@ lr1110_status_t lr1110_gnss_almanac_full_update( const void* context, const lr11
 
         const lr1110_hal_status_t local_hal_status = lr1110_hal_write(
             context, cbuffer, LR1110_GNSS_ALMANAC_FULL_UPDATE_CMD_LENGTH, almanac_to_write, almanac_size_to_write );
-
         if( local_hal_status != LR1110_HAL_STATUS_OK )
         {
             return ( lr1110_status_t ) local_hal_status;
@@ -235,26 +237,8 @@ lr1110_status_t lr1110_gnss_almanac_full_update( const void* context, const lr11
     return ( lr1110_status_t ) hal_status;
 }
 
-lr1110_status_t lr1110_gnss_get_almanac_address_size( const void* context, uint32_t* memory, uint16_t* size )
-{
-    uint8_t cbuffer[LR1110_GNSS_ALMANAC_READ_CMD_LENGTH] = { ( uint8_t )( LR1110_GNSS_ALMANAC_READ_OC >> 8 ),
-                                                             ( uint8_t )( LR1110_GNSS_ALMANAC_READ_OC >> 0 ) };
-
-    uint8_t rbuffer[LR1110_GNSS_ALMANAC_REAC_RBUFFER_LENGTH] = { 0 };
-
-    const lr1110_hal_status_t hal_status = lr1110_hal_read( context, cbuffer, LR1110_GNSS_ALMANAC_READ_CMD_LENGTH,
-                                                            rbuffer, LR1110_GNSS_ALMANAC_REAC_RBUFFER_LENGTH );
-
-    if( hal_status == LR1110_HAL_STATUS_OK )
-    {
-        *memory = lr1110_gnss_uint8_to_uint32( &rbuffer[0] );
-        *size   = ( ( ( uint16_t ) rbuffer[4] ) << 8 ) | ( ( uint16_t ) rbuffer[5] );
-    }
-
-    return ( lr1110_status_t ) hal_status;
-}
-
-lr1110_status_t lr1110_gnss_read_almanac( const void* context, lr1110_gnss_almanac_full_read_bytestream_t almanac_bytestream )
+lr1110_status_t lr1110_gnss_read_almanac( const void*                                context,
+                                          lr1110_gnss_almanac_full_read_bytestream_t almanac_bytestream )
 {
     uint32_t        almanac_address = 0;
     uint16_t        almanac_size    = 0;
@@ -274,7 +258,6 @@ lr1110_status_t lr1110_gnss_read_almanac( const void* context, lr1110_gnss_alman
 
         const lr1110_status_t local_status = lr1110_regmem_read_regmem32(
             context, almanac_address, temporary_buffer, LR1110_GNSS_READ_ALMANAC_TEMPBUFFER_SIZE_BYTE );
-
         if( local_status != LR1110_STATUS_OK )
         {
             return local_status;
@@ -295,7 +278,8 @@ lr1110_status_t lr1110_gnss_read_almanac( const void* context, lr1110_gnss_alman
     return status;
 }
 
-lr1110_status_t lr1110_gnss_get_almanac_age_for_satellite( const void* context, const lr1110_gnss_satellite_id_t sv_id, uint16_t* almanac_age )
+lr1110_status_t lr1110_gnss_get_almanac_age_for_satellite( const void* context, const lr1110_gnss_satellite_id_t sv_id,
+                                                           uint16_t* almanac_age )
 {
     uint32_t              almanac_base_address = 0;
     uint16_t              almanac_size         = 0;
@@ -307,7 +291,7 @@ lr1110_status_t lr1110_gnss_get_almanac_age_for_satellite( const void* context, 
         return status_get_almanac_address_size;
     }
 
-    const uint16_t offset_almanac_date = sv_id * LR1110_GNSS_SINGLE_ALMANAC_READ_SIZE + 1;
+    const uint16_t offset_almanac_date                               = sv_id * LR1110_GNSS_SINGLE_ALMANAC_READ_SIZE + 1;
     uint8_t        raw_almanac_date[LR1110_GNSS_ALMANAC_DATE_LENGTH] = { 0 };
 
     const lr1110_status_t status_read_mem = lr1110_regmem_read_mem8(
@@ -338,8 +322,26 @@ lr1110_status_t lr1110_gnss_get_almanac_crc( const void* context, uint32_t* alma
 
     const lr1110_status_t status_read_mem =
         lr1110_regmem_read_regmem32( context, almanac_base_address + offset_almanac, almanac_crc, 1 );
-
     return status_read_mem;
+}
+
+lr1110_status_t lr1110_gnss_get_almanac_address_size( const void* context, uint32_t* memory, uint16_t* size )
+{
+    uint8_t cbuffer[LR1110_GNSS_ALMANAC_READ_CMD_LENGTH] = { ( uint8_t )( LR1110_GNSS_ALMANAC_READ_OC >> 8 ),
+                                                             ( uint8_t )( LR1110_GNSS_ALMANAC_READ_OC >> 0 ) };
+
+    uint8_t rbuffer[LR1110_GNSS_ALMANAC_REAC_RBUFFER_LENGTH] = { 0 };
+
+    const lr1110_hal_status_t hal_status = lr1110_hal_read( context, cbuffer, LR1110_GNSS_ALMANAC_READ_CMD_LENGTH,
+                                                            rbuffer, LR1110_GNSS_ALMANAC_REAC_RBUFFER_LENGTH );
+
+    if( hal_status == LR1110_HAL_STATUS_OK )
+    {
+        *memory = lr1110_gnss_uint8_to_uint32( &rbuffer[0] );
+        *size   = ( ( ( uint16_t ) rbuffer[4] ) << 8 ) | ( ( uint16_t ) rbuffer[5] );
+    }
+
+    return ( lr1110_status_t ) hal_status;
 }
 
 lr1110_status_t lr1110_gnss_push_solver_msg( const void* context, const uint8_t* payload, const uint16_t payload_size )
@@ -351,7 +353,8 @@ lr1110_status_t lr1110_gnss_push_solver_msg( const void* context, const uint8_t*
                                                  payload_size );
 }
 
-lr1110_status_t lr1110_gnss_set_constellations_to_use( const void* context, const lr1110_gnss_constellation_mask_t constellation_to_use )
+lr1110_status_t lr1110_gnss_set_constellations_to_use( const void*                            context,
+                                                       const lr1110_gnss_constellation_mask_t constellation_to_use )
 {
     uint8_t cbuffer[LR1110_GNSS_SET_CONSTALLATION_CMD_LENGTH];
 
@@ -363,7 +366,8 @@ lr1110_status_t lr1110_gnss_set_constellations_to_use( const void* context, cons
     return ( lr1110_status_t ) lr1110_hal_write( context, cbuffer, LR1110_GNSS_SET_CONSTALLATION_CMD_LENGTH, 0, 0 );
 }
 
-lr1110_status_t lr1110_gnss_read_used_constellations( const void* context, lr1110_gnss_constellation_mask_t* constellations_used )
+lr1110_status_t lr1110_gnss_read_used_constellations( const void*                       context,
+                                                      lr1110_gnss_constellation_mask_t* constellations_used )
 {
     uint8_t cbuffer[LR1110_GNSS_READ_CONSTALLATION_CMD_LENGTH];
 
@@ -374,7 +378,8 @@ lr1110_status_t lr1110_gnss_read_used_constellations( const void* context, lr111
                                                 constellations_used, sizeof( *constellations_used ) );
 }
 
-lr1110_status_t lr1110_gnss_set_almanac_update( const void* context, const lr1110_gnss_constellation_mask_t constellations_to_update )
+lr1110_status_t lr1110_gnss_set_almanac_update( const void*                            context,
+                                                const lr1110_gnss_constellation_mask_t constellations_to_update )
 {
     uint8_t cbuffer[LR1110_GNSS_SET_ALMANAC_UPDATE_CMD_LENGTH];
 
@@ -386,7 +391,8 @@ lr1110_status_t lr1110_gnss_set_almanac_update( const void* context, const lr111
     return ( lr1110_status_t ) lr1110_hal_write( context, cbuffer, LR1110_GNSS_SET_ALMANAC_UPDATE_CMD_LENGTH, 0, 0 );
 }
 
-lr1110_status_t lr1110_gnss_read_almanac_update( const void* context, lr1110_gnss_constellation_mask_t* constellations_to_update )
+lr1110_status_t lr1110_gnss_read_almanac_update( const void*                       context,
+                                                 lr1110_gnss_constellation_mask_t* constellations_to_update )
 {
     uint8_t cbuffer[LR1110_GNSS_READ_ALMANAC_UPDATE_CMD_LENGTH];
 
@@ -414,7 +420,8 @@ lr1110_status_t lr1110_gnss_read_firmware_version( const void* context, lr1110_g
     return ( lr1110_status_t ) hal_status;
 }
 
-lr1110_status_t lr1110_gnss_read_supported_constellations( const void* context, lr1110_gnss_constellation_mask_t* supported_constellations )
+lr1110_status_t lr1110_gnss_read_supported_constellations( const void*                       context,
+                                                           lr1110_gnss_constellation_mask_t* supported_constellations )
 {
     uint8_t cbuffer[LR1110_GNSS_READ_SUPPORTED_CONSTELLATION_CMD_LENGTH];
 
@@ -425,7 +432,8 @@ lr1110_status_t lr1110_gnss_read_supported_constellations( const void* context, 
                                                 supported_constellations, sizeof( *supported_constellations ) );
 }
 
-lr1110_status_t lr1110_gnss_set_scan_mode( const void* context, const lr1110_gnss_scan_mode_t scan_mode, uint8_t* inter_capture_delay_second )
+lr1110_status_t lr1110_gnss_set_scan_mode( const void* context, const lr1110_gnss_scan_mode_t scan_mode,
+                                           uint8_t* inter_capture_delay_second )
 {
     uint8_t cbuffer[LR1110_GNSS_SET_SCAN_MODE_CMD_LENGTH];
 
@@ -488,27 +496,29 @@ lr1110_status_t lr1110_gnss_scan_continuous( const void* context )
     return ( lr1110_status_t ) lr1110_hal_write( context, cbuffer, LR1110_GNSS_SCAN_CONTINUOUS_CMD_LENGTH, 0, 0 );
 }
 
-lr1110_status_t lr1110_gnss_set_assistance_position(const void* context, const lr1110_gnss_solver_assistance_position_t* assistance_position )
+lr1110_status_t lr1110_gnss_set_assistance_position(
+    const void* context, const lr1110_gnss_solver_assistance_position_t* assistance_position )
 {
-    int16_t latitude, longitude;
+    const int16_t latitude  = ( ( assistance_position->latitude * 2048 ) / LR1110_GNSS_SCALING_LATITUDE );
+    const int16_t longitude = ( ( assistance_position->longitude * 2048 ) / LR1110_GNSS_SCALING_LONGITUDE );
 
     uint8_t cbuffer[LR1110_GNSS_SET_ASSISTANCE_POSITION_CMD_LENGTH];
 
     cbuffer[0] = ( uint8_t )( LR1110_GNSS_SET_ASSISTANCE_POSITION_OC >> 8 );
     cbuffer[1] = ( uint8_t )( LR1110_GNSS_SET_ASSISTANCE_POSITION_OC >> 0 );
 
-    latitude   = ( ( assistance_position->latitude * 2048 ) / LR1110_GNSS_SCALING_LATITUDE );
     cbuffer[2] = ( uint8_t )( latitude >> 8 );
     cbuffer[3] = ( uint8_t )( latitude );
 
-    longitude  = ( ( assistance_position->longitude * 2048 ) / LR1110_GNSS_SCALING_LONGITUDE );
     cbuffer[4] = ( uint8_t )( longitude >> 8 );
     cbuffer[5] = ( uint8_t )( longitude );
 
-    return ( lr1110_status_t ) lr1110_hal_write( context, cbuffer, LR1110_GNSS_SET_ASSISTANCE_POSITION_CMD_LENGTH, 0, 0 );
+    return ( lr1110_status_t ) lr1110_hal_write( context, cbuffer, LR1110_GNSS_SET_ASSISTANCE_POSITION_CMD_LENGTH, 0,
+                                                 0 );
 }
 
-lr1110_status_t lr1110_gnss_read_assistance_position( const void* context, lr1110_gnss_solver_assistance_position_t* assistance_position )
+lr1110_status_t lr1110_gnss_read_assistance_position( const void*                               context,
+                                                      lr1110_gnss_solver_assistance_position_t* assistance_position )
 {
     uint8_t position_buffer[4] = { 0x00 };
     int16_t position_tmp;
@@ -574,10 +584,10 @@ lr1110_status_t lr1110_gnss_push_dmc_msg( const void* context, uint8_t* dmc_msg,
                                                  dmc_msg_len );
 }
 
-lr1110_status_t lr1110_gnss_get_context_status( const void* context, lr1110_gnss_context_status_bytestream_t context_status )
+lr1110_status_t lr1110_gnss_get_context_status( const void*                             context,
+                                                lr1110_gnss_context_status_bytestream_t context_status )
 {
-    uint8_t         cbuffer[LR1110_GNSS_GET_CONTEXT_STATUS_CMD_LENGTH];
-    lr1110_status_t status = LR1110_STATUS_ERROR;
+    uint8_t cbuffer[LR1110_GNSS_GET_CONTEXT_STATUS_CMD_LENGTH];
 
     cbuffer[0] = ( uint8_t )( LR1110_GNSS_GET_CONTEXT_STATUS_OC >> 8 );
     cbuffer[1] = ( uint8_t )( LR1110_GNSS_GET_CONTEXT_STATUS_OC >> 0 );
@@ -611,9 +621,7 @@ lr1110_status_t lr1110_gnss_get_detected_satellites( const void* context, const 
     cbuffer[1] = ( uint8_t )( LR1110_GNSS_GET_SATELLITES_OC >> 0 );
 
     const lr1110_hal_status_t hal_status =
-    lr1110_hal_read( context, cbuffer, LR1110_GNSS_GET_SV_SATELLITES_CMD_LENGTH, result_buffer, read_size );
-    lr1110_hal_read( context, cbuffer, LR1110_GNSS_GET_SV_SATELLITES_CMD_LENGTH, result_buffer, read_size );
-    lr1110_hal_read( context, cbuffer, LR1110_GNSS_GET_SV_SATELLITES_CMD_LENGTH, result_buffer, read_size );
+        lr1110_hal_read( context, cbuffer, LR1110_GNSS_GET_SV_SATELLITES_CMD_LENGTH, result_buffer, read_size );
     if( hal_status == LR1110_HAL_STATUS_OK )
     {
         for( uint8_t index_satellite = 0; index_satellite < max_satellites_to_fetch; index_satellite++ )
@@ -663,4 +671,5 @@ uint32_t lr1110_gnss_uint8_to_uint32( uint8_t* value )
     return ( ( ( uint32_t ) value[0] ) << 24 ) + ( ( ( uint32_t ) value[1] ) << 16 ) +
            ( ( ( uint32_t ) value[2] ) << 8 ) + ( ( ( uint32_t ) value[3] ) << 0 );
 }
+
 /* --- EOF ------------------------------------------------------------------ */

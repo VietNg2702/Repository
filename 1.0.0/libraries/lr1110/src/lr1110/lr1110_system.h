@@ -88,7 +88,6 @@ lr1110_status_t lr1110_system_wakeup( const void* context );
  * @brief Return stat1, stat2, and irq_status
  *
  * @param [in] context Chip implementation context
- *
  * @param [out] stat1 stat1 status variable
  * @param [out] stat2 stat2 status variable
  * @param [out] irq_status irq_status status variable
@@ -98,9 +97,6 @@ lr1110_status_t lr1110_system_wakeup( const void* context );
  * @remark This function requires lr1110_hal_write_read to be implemented
  */
 lr1110_status_t lr1110_system_get_status( const void* context, lr1110_system_stat1_t* stat1,
-                                          lr1110_system_stat2_t* stat2, lr1110_system_irq_mask_t* irq_status );
-
-lr1110_status_t lr1110_system_get_status2( const void* context, lr1110_system_stat1_t* stat1,
                                           lr1110_system_stat2_t* stat2, lr1110_system_irq_mask_t* irq_status );
 
 /*!
@@ -280,8 +276,6 @@ lr1110_status_t lr1110_system_get_and_clear_irq_status( const void* context, lr1
 lr1110_status_t lr1110_system_cfg_lfclk( const void* context, const lr1110_system_lfclk_cfg_t lfclock_cfg,
                                          const bool wait_for_32k_ready );
 
-lr1110_status_t lr1110_system_cfg_lfclk2( const void* context, uint8_t config);
-
 /*!
  * @brief Enable and configure TCXO supply voltage and detection timeout
  *
@@ -392,7 +386,7 @@ lr1110_status_t lr1110_system_set_fs( const void* context );
  * @brief Erase an info page
  *
  * @param [in] context Chip implementation context
- * @param [in] info_page_id Info page to be erased
+ * @param [in] info_page_id Info page to be erased. Only LR1110_SYSTEM_INFOPAGE_1 is allowed.
  *
  * @returns Operation status
  *
@@ -403,10 +397,8 @@ lr1110_status_t lr1110_system_erase_infopage( const void* context, const lr1110_
 /*!
  * @brief Write data in an info page
  *
- * It is possibe to cross from page 0 to 1 if (address + length >= 512)
- *
  * @param [in] context Chip implementation context
- * @param [in] info_page_id Info page where data are written
+ * @param [in] info_page_id Info page where data are written. Only LR1110_SYSTEM_INFOPAGE_1 is allowed.
  * @param [in] address Address within the info page (aligned on 32-bit data)
  * @param [in] data Pointer to the data to write (data buffer shall be - at least - length words long)
  * @param [in] length Number of 32-bit data to write (maximum value is 64)
@@ -504,6 +496,19 @@ lr1110_status_t lr1110_system_read_pin_custom_eui( const void* context, lr1110_s
  * @returns Operation status
  */
 lr1110_status_t lr1110_system_get_random_number( const void* context, uint32_t* random_number );
+
+/*!
+ * @brief Enable the CRC on SPI transactions
+ *
+ * @remark This command shall always be sent with a CRC (to both enable and disable the feature). The function does not
+ * take care of this additional byte - which is under the responsibility of the underlying HAL functions
+ *
+ * @param [in] context Chip implementation context
+ * @param [in] enable_crc CRC
+ *
+ * @returns Operation status
+ */
+lr1110_status_t lr1110_system_enable_spi_crc( const void* context, bool enable_crc );
 
 #ifdef __cplusplus
 }

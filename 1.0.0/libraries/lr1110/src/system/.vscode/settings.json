@@ -1,6 +1,5 @@
 {
     "files.associations": {
-        "system_i2c.h": "c",
-        "system_spi.h": "c"
+        "system_uart.h": "c"
     }
 }
