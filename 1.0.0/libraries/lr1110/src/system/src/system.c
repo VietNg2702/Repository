@@ -1,5 +1,5 @@
-#include "config_mode.h"
-#include "configuration.h"
+#include "lr1110_user_config_mode.h"
+#include "lr1110_user_config_io.h"
 #include "../inc/system.h"
 #include "../../lr1110/lr1110_hal.h"
 

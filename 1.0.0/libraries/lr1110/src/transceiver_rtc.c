@@ -25,7 +25,7 @@
 #include <ctype.h>
 #include <math.h>
 
-#include "config_mode.h"
+#include "lr1110_user_config_mode.h"
 #include "r_core_cfg.h"
 #include "r_system_api.h"
 #include "r_lpm_api.h"
@@ -71,12 +71,15 @@ int8_t read_validate_location(uint32_t last_adjust_count, char* date_buf, enviro
     delCRLF(date_buf);
     sscanf(date_buf, "%u%f%f%f", &gps_second, &(p_location->altitude), &(p_location->latitude), &(p_location->longitude) );
 
-    if ( (gps_second < 1200000000) 
-      || (p_location->latitude < -90 || p_location->latitude > 90)
-      ||  (p_location->longitude <-180 || p_location->longitude >180)
-      ||  (p_location->altitude <-100 )) {
+    if ((gps_second < 1200000000) || 
+        (p_location->latitude < -90 || p_location->latitude > 90)||  
+        (p_location->longitude <-180 || p_location->longitude >180)||  
+        (p_location->altitude <-100 )) 
+    {
         valid_flag = false;
-    } else {
+    } 
+    else 
+    {
         last_rtc_adjust_second = gps_second + (system_lptim_get() - last_adjust_count + 500) / 1000;
         rtc_set_current_binary_time (last_rtc_adjust_second);
         valid_flag = true;
@@ -88,15 +91,12 @@ int8_t read_validate_location(uint32_t last_adjust_count, char* date_buf, enviro
 void rtc_adjust_TX(environment_location_t* p_location_assist, int8_t* p_valid_flag)
 {
     int8_t valid_flag;
-//    char* date_buf;
-//    uint32_t last_agt_count;
     uint32_t last_adjust_count;
     int rtc_progress_second;
 
     valid_flag = *p_valid_flag;
     rtc_progress_second = (int32_t)rtc_read_current_binary_time() - (int32_t)last_rtc_adjust_second;
 
-//      if (valid_flag == true &&  rtc_progress_second < RTC_ADJUST_INTERVAL) {
     if ( rtc_progress_second < RTC_ADJUST_INTERVAL && rtc_valid_flag == true) {
         *p_valid_flag = true;
         return ;
@@ -104,9 +104,7 @@ void rtc_adjust_TX(environment_location_t* p_location_assist, int8_t* p_valid_fl
     valid_flag = false;
     radio_init();
     semtech_radio_tx("!DATE\n", ACK_RECEIVE_INTERVAL);
-//    last_agt_count = system_lptim_get();
-//  while (system_lptim_get() < last_agt_count + (ACK_WAIT_INTERVAL-1000)) {
-//  }
+
     last_adjust_count = system_lptim_get();
     radio_data_buf[0] = 0;
     semtech_radio_rx(radio_data_buf, ACK_RECEIVE_INTERVAL);
@@ -128,30 +126,31 @@ void rtc_adjust_TX(environment_location_t* p_location_assist, int8_t* p_valid_fl
 }
 
 
-int8_t GetDateAndApproximateLocation_from_PC( environment_location_t* p_location , uint32_t timeout)
+int8_t GetDateAndApproximateLocationFromPC( environment_location_t* p_location , uint32_t timeout)
 {
     int8_t valid_flag;
-//    int16_t ic;
     uint32_t timeout_count;
     uint32_t last_adjust_count;
     int16_t receive_len;
     char c;
 
     timeout_count = system_lptim_get() + timeout;
-//  uart_tx_fifo_flush();
     uart_tx_fifo_wait_empty(&uart0_dev);
     uart_rx_fifo_flush(&uart0_dev);
     strcpy(uart_send_buf, "!DATE\n");
     uart_fifo_send_string(&uart0_dev, uart_send_buf);
-    for (; ;) {
+    while(1) 
+    {
         system_time_wait_ms( 10 );
-        if (timeout !=0 && system_lptim_get() > timeout_count) {
+        if (timeout !=0 && system_lptim_get() > timeout_count) 
+        {
             valid_flag=false;
             return valid_flag;
         }
         last_adjust_count = system_lptim_get();
         receive_len = uart_fifo_receive_line(&uart0_dev, uart_receive_buf, 255 ,5000 );
-        if (receive_len < 0) {
+        if (receive_len < 0) 
+        {
             valid_flag=false;
             return valid_flag;
         }
@@ -163,7 +162,7 @@ int8_t GetDateAndApproximateLocation_from_PC( environment_location_t* p_location
     system_time_wait_ms( 100 );
     __NOP();
     valid_flag = read_validate_location(last_adjust_count, uart_receive_buf, p_location);
-//  if (assist_data_valid_flag) {return 0;} else {return -1;}
+
     return valid_flag;
 }
 

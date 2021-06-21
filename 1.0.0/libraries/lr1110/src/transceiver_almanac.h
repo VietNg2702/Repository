@@ -13,9 +13,12 @@ extern "C" {
 
 
 uint16_t GetAlmanacAgeFromGpsEpochInDays( uint16_t almanac_age );
-uint16_t GetAlmanacAgeDaysSinceToday( );
-int8_t almanac_update_TX(void);
-int8_t get_AlmanacData_from_PC(uint8_t data_buffer[], uint32_t timeout);
+
+uint16_t GetAlmanacAgeDaysSinceToday(void);
+
+int8_t   AlmanacUpdateTX(void);
+
+int8_t   GetAlmanacDataFromPC(uint8_t data_buffer[], uint32_t timeout);
 
 
 

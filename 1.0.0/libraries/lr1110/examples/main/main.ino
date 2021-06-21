@@ -5,33 +5,33 @@
 #include <math.h>
 
 #include "RE01_256KB.h"
-#include "config_mode.h"
+#include "lr1110_user_config_mode.h"
 #include "r_core_cfg.h"
 #include "r_system_api.h"
 #include "r_lpm_api.h"
 #include "r_spi_cmsis_api.h"
 #include "lib_additional.h"
 
-#include "../src/system/inc/system.h"
-#include "../src/lr1110/lr1110_system.h"
-#include "../src/lr1110/lr1110_gnss.h"
-#include "../src/lr1110/lr1110_gnss_types.h"
-#include "../src/lr1110/lr1110_hal.h"
-#include "../src/lr1110/lr1110_radio.h"
+#include "system/inc/system.h"
+#include "lr1110/lr1110_system.h"
+#include "lr1110/lr1110_gnss.h"
+#include "lr1110/lr1110_gnss_types.h"
+#include "lr1110/lr1110_hal.h"
+#include "lr1110/lr1110_radio.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "../src/transceiver_radio.h"
-#include "../src/transceiver_gnss.h"
-#include "../src/transceiver_wifi_scan.h"
-#include "../src/transceiver_almanac.h"
-#include "../src/transceiver_rtc.h"
-#include "../src/transceiver_power.h"
+#include "transceiver_radio.h"
+#include "transceiver_gnss.h"
+#include "transceiver_wifi_scan.h"
+#include "transceiver_almanac.h"
+#include "transceiver_rtc.h"
+#include "transceiver_power.h"
 
-#include "lis2de12.h"
-#include "isl9122.h"
-#include "battery.h"
+#include "peripherials/lis2de12.h"
+#include "peripherials/isl9122.h"
+#include "peripherials/battery.h"
 #ifdef __cplusplus
 }
 #endif
@@ -259,13 +259,13 @@ void tracker_tx()
     DeviceModem_Init();
     while (1) 
     {
-        lna_off();
+        lr1110_lna_off();
         lr1110_power_off();
         system_lpm_setup_rtc();
 #if (INHIBIT_SSTBY != 1)
         system_uninit_ISO2();
         system_uninit_PORT();
-        DCDC_off();
+        lr1110_dcdc_off();
         __NOP();
         wait_for_wakeup_interrupt(); // Wait for IRQ from acceleromater at SSTBY mode
 #if (TX_BOARD_VERSION == 1)
@@ -286,10 +286,11 @@ void tracker_tx()
         system_restore_PORT();
         system_init_ISO2();
         system_time_wait_ms( 100 );
-        DCDC_on();
+        lr1110_dcdc_on();
 
 #endif //INHIBIT_SSTBY
-        if (battery_voltage > 2.3 && battery_voltage <= 3.3) {
+        if (battery_voltage > 2.3 && battery_voltage <= 3.3) 
+        {
             isl9122_output_voltage_setting_request(battery_voltage);
         }
         system_time_wait_ms( 1 );
@@ -301,7 +302,7 @@ void tracker_tx()
         rtc_adjust_TX(&location_assist, &assist_data_valid_flag);
 #if (USE_ALMANAC_UPDATE == 1)
     if (assist_data_valid_flag) {
-       almanac_update_TX();
+       AlmanacUpdateTX();
     }
 #endif
 
@@ -371,8 +372,8 @@ void tracker_rx()
     strcpy(uart_send_buf, "###### ===== Radio RX ==== ######\r\n"); 
     uart_fifo_send_string(&uart0_dev, uart_send_buf);
     system_time_wait_ms( 10 );
-    assist_data_valid_flag = GetDateAndApproximateLocation_from_PC( &location_assist , 0);
-    almanac_data_valid_flag = get_AlmanacData_from_PC(almanac_data, 3000);
+    assist_data_valid_flag = GetDateAndApproximateLocationFromPC( &location_assist , 0);
+    almanac_data_valid_flag = GetAlmanacDataFromPC(almanac_data, 3000);
 
     while (1) 
     {
@@ -406,7 +407,7 @@ void tracker_rx()
             uart_fifo_send_string(&uart0_dev, uart_send_buf);
             if (assist_data_valid_flag != true) {
                 system_time_wait_ms( 1000 );
-                assist_data_valid_flag = GetDateAndApproximateLocation_from_PC( &location_assist ,  ACK_WAIT_COUNT);
+                assist_data_valid_flag = GetDateAndApproximateLocationFromPC( &location_assist ,  ACK_WAIT_COUNT);
             }
         } else if (strncmp(radio_data_buf, "!ALMA", 5) == 0) {
             system_time_wait_ms( 1 );
@@ -430,7 +431,7 @@ void tracker_rx()
                 uart_fifo_send_string(&uart0_dev, uart_send_buf);
             }
             if (almanac_data_valid_flag != true) {
-                almanac_data_valid_flag = get_AlmanacData_from_PC(almanac_data, 3000);
+                almanac_data_valid_flag = GetAlmanacDataFromPC(almanac_data, 3000);
             }
         } else if (strncmp(radio_data_buf, "!SEND", 5) == 0) {
 #if (SEND_TO_SERVER == 1)
@@ -453,7 +454,7 @@ void tracker_rx()
                 nbrResults = ((wifi_tx_header*)radio_data_buf)->nbrResults;
                 packet_pos = (wifi_tx_packet*)(radio_data_buf+sizeof(wifi_tx_header));
                 for (jc=0; jc<nbrResults; jc++) {
-                    wifi_packet_to_string((wifi_tx_header*)radio_data_buf, packet_pos, uart_send_buf);
+                    WifiScan_PacketToString((wifi_tx_header*)radio_data_buf, packet_pos, uart_send_buf);
                     packet_pos ++;
                     uart_fifo_send_string(&uart0_dev, uart_send_buf);
                     while (uart_fifo_send_finished(&uart0_dev) == false);
@@ -503,7 +504,7 @@ static int semtech_main( void )
     system_init(&lr1110);
     system_init_ISO2();
     system_time_wait_ms( 10 );
-    DCDC_on(); // DCDC must be ON before Initialize
+    lr1110_dcdc_on(); // DCDC must be ON before Initialize
     if (battery_voltage > 2.3 && battery_voltage <= 3.3) {
         isl9122_output_voltage_setting_request(battery_voltage);
     }

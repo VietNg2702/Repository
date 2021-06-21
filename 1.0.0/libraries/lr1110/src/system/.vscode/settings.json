@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "system_i2c.h": "c",
+        "system_spi.h": "c"
+    }
+}

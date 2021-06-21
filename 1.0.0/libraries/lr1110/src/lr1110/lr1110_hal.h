@@ -125,11 +125,11 @@ lr1110_hal_status_t lr1110_hal_reset( const void* context );
  *
  * @remark Must be implemented by the upper layer
  *
- * @param [in] context Radio implementation parameters
+ * @param [in] radio Radio implementation parameters
 
  * @returns Operation status
  */
-lr1110_hal_status_t lr1110_hal_wakeup( const void* context );
+lr1110_hal_status_t lr1110_hal_wakeup( void* radio  );
 
 #ifdef __cplusplus
 }

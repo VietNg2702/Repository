@@ -168,7 +168,6 @@ static uint8_t cbuffer2[20];
 lr1110_status_t lr1110_system_get_status2( const void* context, lr1110_system_stat1_t* stat1,
                                           lr1110_system_stat2_t* stat2, lr1110_system_irq_mask_t* irq_status )
 {
-//    uint8_t         cbuffer[LR1110_SYSTEM_GET_STATUS_CMD_LENGTH] = { 0x00 };
     lr1110_status_t status                                       = LR1110_STATUS_ERROR;
 
     cbuffer2[0] = ( uint8_t )( LR1110_SYSTEM_GET_STATUS_OC >> 8 );
@@ -361,7 +360,6 @@ lr1110_status_t lr1110_system_clear_irq_status( const void* context, const lr111
     cbuffer[5] = ( uint8_t )( irqs_to_clear >> 0 );
 
     return ( lr1110_status_t ) lr1110_hal_write( context, cbuffer, LR1110_SYSTEM_CLEAR_IRQ_CMD_LENGTH, 0, 0 );
-//        return ( lr1110_status_t ) lr1110_modem_hal_write( context, cbuffer, LR1110_SYSTEM_CLEAR_IRQ_CMD_LENGTH, 0, 0 );
 }
 
 lr1110_status_t lr1110_system_get_and_clear_irq_status( const void* context, lr1110_system_irq_mask_t* irq )
@@ -499,7 +497,7 @@ lr1110_status_t lr1110_system_set_standby( const void* context, const lr1110_sys
 
 lr1110_status_t lr1110_system_wakeup( const void* context )
 {
-    return ( lr1110_status_t ) lr1110_hal_wakeup( context );
+    return ( lr1110_status_t ) lr1110_hal_wakeup( (void*)context );
 }
 
 lr1110_status_t lr1110_system_set_fs( const void* context )

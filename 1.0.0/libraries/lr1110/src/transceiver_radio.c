@@ -36,7 +36,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "config_mode.h"
+#include "lr1110_user_config_mode.h"
 #include "r_core_cfg.h"
 #include "r_system_api.h"
 #include "r_lpm_api.h"
@@ -55,6 +55,9 @@
 #include "transceiver_radio.h"
 #include "transceiver_gnss.h"
 #include "transceiver_power.h"
+
+
+#define RF_FREQUENCY            923000000 // Hz
 
 typedef enum
 {
@@ -80,16 +83,12 @@ lr1110_radio_mod_params_lora_t modulation_lora;
 lr1110_radio_pkt_params_lora_t packet_lora;
 lr1110_radio_pa_cfg_t pa_configuration;
 
-volatile int modem_result;
-
 
 char lora_tx_buf[PAYLOAD_LENGTH+1];
 char lora_rx_buf[PAYLOAD_LENGTH+1];
 
 
 extern radio_t lr1110;
-
-//static radio_t* radio;
 
 
 void DeviceModem_Init( )
@@ -108,17 +107,15 @@ void DeviceModem_Init( )
 
     lr1110_system_set_tcxo_mode( &lr1110, LR1110_SYSTEM_TCXO_CTRL_3_0V, 500 );
     lr1110_system_cfg_lfclk( &lr1110, LR1110_SYSTEM_LFCLK_XTAL, true );
-//  DeviceModem_SetAssistancePositionFromEnvironment();
 }
 
-
-
-
-int8_t  radio_init_sub()
+static int  radio_init_sub()
 {
     uint16_t errors;
+    int result;
 
-	modem_result=    lr1110_system_set_reg_mode( &lr1110, LR1110_SYSTEM_REG_MODE_DCDC );
+	result = lr1110_system_set_reg_mode( &lr1110, LR1110_SYSTEM_REG_MODE_DCDC );
+    APP_ERR_RETURN(result);
 
 	lr1110_system_rfswitch_cfg_t rf_switch_setup = { 0 };
     rf_switch_setup.enable                       = DEMO_COMMON_RF_SWITCH_ENABLE;
@@ -128,96 +125,127 @@ int8_t  radio_init_sub()
     rf_switch_setup.rx                           = DEMO_COMMON_RF_SWITCH_RX;
     rf_switch_setup.wifi                         = DEMO_COMMON_RF_SWITCH_WIFI;
     rf_switch_setup.gnss                         = DEMO_COMMON_RF_SWITCH_GNSS;
-    lr1110_system_set_dio_as_rf_switch( &lr1110, &rf_switch_setup );
 
-	modem_result= lr1110_system_set_tcxo_mode( &lr1110, LR1110_SYSTEM_TCXO_CTRL_3_0V, 500 );
-	modem_result= lr1110_system_cfg_lfclk( &lr1110, LR1110_SYSTEM_LFCLK_XTAL, true );
-	modem_result= lr1110_system_clear_errors( &lr1110 );
-	modem_result= lr1110_system_calibrate( &lr1110, 0x3F );
+    result = lr1110_system_set_dio_as_rf_switch( &lr1110, &rf_switch_setup );
+    APP_ERR_RETURN(result);
 
-	modem_result= lr1110_system_get_errors( &lr1110, &errors );
-	modem_result= lr1110_system_clear_errors( &lr1110 );
-	modem_result= lr1110_system_clear_irq_status( &lr1110, LR1110_SYSTEM_IRQ_ALL_MASK );
+	result= lr1110_system_set_tcxo_mode( &lr1110, LR1110_SYSTEM_TCXO_CTRL_3_0V, 500 );
+    APP_ERR_RETURN(result);
+
+	result= lr1110_system_cfg_lfclk( &lr1110, LR1110_SYSTEM_LFCLK_XTAL, true );
+    APP_ERR_RETURN(result);
+
+	result= lr1110_system_clear_errors( &lr1110 );
+    APP_ERR_RETURN(result);
+
+	result= lr1110_system_calibrate( &lr1110, 0x3F );
+    APP_ERR_RETURN(result);
+
+	result= lr1110_system_get_errors( &lr1110, &errors );
+    APP_ERR_RETURN(result);
+
+	result= lr1110_system_clear_errors( &lr1110 );
+    APP_ERR_RETURN(result);
+
+	result= lr1110_system_clear_irq_status( &lr1110, LR1110_SYSTEM_IRQ_ALL_MASK );
+    APP_ERR_RETURN(result);
 
     return 0;
 }
 
-#define RF_FREQUENCY            923000000 // Hz
 
 
-int8_t radio_init()
+int radio_init()
 {
-//	uint16_t i;
-    modem_result=    radio_init_sub();
+    int result = radio_init_sub();
+    APP_ERR_RETURN(result);
 
-    modem_result = lr1110_radio_set_pkt_type( &lr1110, LR1110_RADIO_PKT_TYPE_LORA );
+    result = lr1110_radio_set_pkt_type( &lr1110, LR1110_RADIO_PKT_TYPE_LORA );
+    APP_ERR_RETURN(result);
 
 	modulation_lora.sf   = LR1110_RADIO_LORA_SF7;
 	modulation_lora.bw   = LR1110_RADIO_LORA_BW_125;
 	modulation_lora.cr   = LR1110_RADIO_LORA_CR_4_5;
 	modulation_lora.ldro = 0;
-	modem_result= lr1110_radio_set_lora_mod_params( &lr1110, &modulation_lora );
+
+	result= lr1110_radio_set_lora_mod_params( &lr1110, &modulation_lora );
+    APP_ERR_RETURN(result);
 
 	packet_lora.preamble_len_in_symb  = 8;
 	packet_lora.header_type           = LR1110_RADIO_LORA_PKT_EXPLICIT;  // = DEMO_RADIO_LORA_HDR_DEFAULT;
 	packet_lora.crc                   = LR1110_RADIO_LORA_CRC_OFF;        // = DEMO_RADIO_LORA_CRC_DEFAULT;
 	packet_lora.iq                    = LR1110_RADIO_LORA_IQ_STANDARD;   // = DEMO_RADIO_LORA_IQ_DEFAULT;
-	packet_lora.pld_len_in_bytes = PAYLOAD_LENGTH;
-	modem_result = lr1110_radio_set_lora_pkt_params( &lr1110, &packet_lora );
+	packet_lora.pld_len_in_bytes      = PAYLOAD_LENGTH;
 
-	modem_result=    lr1110_radio_set_rf_freq( &lr1110, RF_FREQUENCY );
+	result = lr1110_radio_set_lora_pkt_params( &lr1110, &packet_lora );
+    APP_ERR_RETURN(result);
+
+	result = lr1110_radio_set_rf_freq( &lr1110, RF_FREQUENCY );
+    APP_ERR_RETURN(result);
 
 	pa_configuration.pa_sel           = LR1110_RADIO_PA_SEL_LP;  // =DEMO_RADIO_PA_SEL_DEFAULT; Low-power Power Amplifier
 	pa_configuration.pa_reg_supply    = LR1110_RADIO_PA_REG_SUPPLY_VREG; // = DEMO_RADIO_PA_REG_SUPPLY_DEFAULT;  Power amplifier supplied by the main regulator
 	pa_configuration.pa_duty_cycle    = DEMO_RADIO_PA_DUTY_CYCLE_DEFAULT; // = 4
 	pa_configuration.pa_hp_sel        = DEMO_RADIO_PA_HP_SEL_DEFAULT; // = 0
-	modem_result = lr1110_radio_set_pa_cfg( &lr1110, &pa_configuration );
+	
+    result = lr1110_radio_set_pa_cfg( &lr1110, &pa_configuration );
+    APP_ERR_RETURN(result);
 
-	modem_result=    lr1110_radio_set_tx_params( &lr1110, DEMO_RADIO_TX_POWER_DEFAULT, LR1110_RADIO_RAMP_240_US );
-    modem_result =     lr1110_system_set_dio_irq_params(&lr1110,
-     LR1110_SYSTEM_IRQ_GNSS_SCAN_DONE | LR1110_SYSTEM_IRQ_TX_DONE | LR1110_SYSTEM_IRQ_RX_DONE | LR1110_SYSTEM_IRQ_TIMEOUT, 0 );
-    modem_result =    lr1110_system_clear_irq_status( &lr1110, LR1110_SYSTEM_IRQ_ALL_MASK );
+	result = lr1110_radio_set_tx_params( &lr1110, DEMO_RADIO_TX_POWER_DEFAULT, LR1110_RADIO_RAMP_240_US );
+    APP_ERR_RETURN(result);
+
+    result = lr1110_system_set_dio_irq_params(&lr1110,
+                                            LR1110_SYSTEM_IRQ_GNSS_SCAN_DONE | 
+                                            LR1110_SYSTEM_IRQ_TX_DONE | 
+                                            LR1110_SYSTEM_IRQ_RX_DONE | 
+                                            LR1110_SYSTEM_IRQ_TIMEOUT, 
+                                            0 );
+    APP_ERR_RETURN(result);
+
+    result = lr1110_system_clear_irq_status( &lr1110, LR1110_SYSTEM_IRQ_ALL_MASK );
+    APP_ERR_RETURN(result);
 
     return 0;
 }
 
 
-int8_t  radio_send(int8_t* buffer)
+int radio_send(int8_t* buffer)
 {
     system_time_wait_ms( 1 );
 
-	modem_result=         lr1110_regmem_write_buffer8( &lr1110, buffer,  PAYLOAD_LENGTH);
+	int result = lr1110_regmem_write_buffer8( &lr1110, buffer,  PAYLOAD_LENGTH);
+    APP_ERR_RETURN(result);
 
     R_NVIC_DisableIRQ(SYSTEM_CFG_EVENT_NUMBER_PORT_IRQ3);
     R_SYS_IrqStatusClear(SYSTEM_CFG_EVENT_NUMBER_PORT_IRQ3);
     irq3_event_flag = false;
     R_NVIC_EnableIRQ(SYSTEM_CFG_EVENT_NUMBER_PORT_IRQ3);
 
-	modem_result=         lr1110_radio_set_tx( &lr1110, 0x00005000 );
-//    nb_of_packets_remaining--;
-//    state = DEMO_RADIO_PER_STATE_WAIT_FOR_TX_DONE;
+	result = lr1110_radio_set_tx( &lr1110, 0x00005000 );
+    APP_ERR_RETURN(result);
+
     return 0;
 }
 
 
-int8_t  radio_wait_for_tx_done(uint32_t timeout)
+int radio_wait_for_tx_done(uint32_t timeout)
 {
-//	int16_t ic;
     int32_t last_received_irq_mask;
-	int8_t result;
+	int result;
 
-    
 	result = semtech_event_wait(ACK_RECEIVE_INTERVAL);
 	if (result !=0) {return result;}
 
-	modem_result=     lr1110_system_get_irq_status( &lr1110, &last_received_irq_mask );
+	result = lr1110_system_get_irq_status( &lr1110, &last_received_irq_mask );
+    APP_ERR_RETURN(result);
 
-	modem_result= 	lr1110_system_clear_irq_status( &lr1110, LR1110_SYSTEM_IRQ_ALL_MASK );
+	result = lr1110_system_clear_irq_status( &lr1110, LR1110_SYSTEM_IRQ_ALL_MASK );
+    APP_ERR_RETURN(result);
+
     return 0;
 }
 
-
-int8_t  radio_receive()
+int radio_receive(void)
 {
     R_NVIC_DisableIRQ(SYSTEM_CFG_EVENT_NUMBER_PORT_IRQ3);
     R_SYS_IrqStatusClear(SYSTEM_CFG_EVENT_NUMBER_PORT_IRQ3);
@@ -225,35 +253,32 @@ int8_t  radio_receive()
     R_NVIC_EnableIRQ(SYSTEM_CFG_EVENT_NUMBER_PORT_IRQ3);
 
     lr1110_radio_set_rx( &lr1110, 0x00000000 );
-//    state = DEMO_RADIO_PER_STATE_WAIT_FOR_RX_DONE;
+
     return 0;
 }
 
-int8_t  radio_wait_for_rx_done(int8_t* buffer, uint32_t timeout)
+int radio_wait_for_rx_done(int8_t* buffer, uint32_t timeout)
 {
-//	int16_t ic;
     int32_t last_received_irq_mask;
-	int8_t result;
+	int result;
 
 	result = semtech_event_wait(timeout);
-	if (result !=0) {return result;}
+	APP_ERR_RETURN(result);
 
-	modem_result=     lr1110_system_get_irq_status( &lr1110, &last_received_irq_mask );
+	result =  lr1110_system_get_irq_status( &lr1110, &last_received_irq_mask );
+    APP_ERR_RETURN(result);
 
     if( ( last_received_irq_mask & ( LR1110_SYSTEM_IRQ_CRC_ERROR | LR1110_SYSTEM_IRQ_HEADER_ERROR ) ) != 0 )
     {
-//        count_rx_wrong_packet++;
-//        has_intermediate_results = true;
-//        state                    = DEMO_RADIO_PER_STATE_SET_RX;
     }
     else if( last_received_irq_mask & LR1110_SYSTEM_IRQ_RX_DONE )
     {
-	    modem_result= lr1110_regmem_read_buffer8( &lr1110, buffer, 0,  PAYLOAD_LENGTH );
-//        count_rx_correct_packet++;
-//        has_intermediate_results = true;
-//        state                    = DEMO_RADIO_PER_STATE_SET_RX;
+	    result = lr1110_regmem_read_buffer8( &lr1110, buffer, 0,  PAYLOAD_LENGTH );
+        APP_ERR_RETURN(result);
     }
-	modem_result= 	lr1110_system_clear_irq_status( &lr1110, LR1110_SYSTEM_IRQ_ALL_MASK );
+	result = lr1110_system_clear_irq_status( &lr1110, LR1110_SYSTEM_IRQ_ALL_MASK );
+    APP_ERR_RETURN(result);
+
     return 0;
 }
 
@@ -263,27 +288,24 @@ int8_t  radio_wait_for_rx_done(int8_t* buffer, uint32_t timeout)
 
 **********************************************************************/
 
-int8_t semtech_radio_tx_len(char* radio_tx_buf ,int16_t len, uint32_t timeout)
+int semtech_radio_tx_len(char* radio_tx_buf ,int16_t len, uint32_t timeout)
 {
     uint8_t jc;
-    int8_t result;
+    int result;
     uint32_t timeout_count;
-//    lr1110_system_sleep_cfg_t sleep_cfg;
 	uint8_t payload_count;
 	uint8_t crc8;
 
-//    sleep_cfg.is_rtc_timeout = true;
-//    sleep_cfg.is_warm_start = true;
-
-//    len = strlen(radio_tx_buf);
     timeout_count = system_lptim_get() + timeout;
-
 	payload_count = (uint8_t)(((len-1) / (PAYLOAD_LENGTH-2)) & 0xFF);
-    for (jc=payload_count; ; jc--) {
+
+    for (jc=payload_count; ; jc--) 
+    {
         lora_tx_buf[0] = jc;
         memcpy(lora_tx_buf+2, radio_tx_buf, PAYLOAD_LENGTH-2 );
 		crc8 = CRC8_calc(lora_tx_buf+2, PAYLOAD_LENGTH-2);
 		lora_tx_buf[1] = crc8;
+
 #if (DEBUG_LED == 1)
     R_SYS_RegisterProtectDisable(SYSTEM_REG_PROTECT_MPC);
     PFS->P210PFS = 0x04 | (jc & 1);
@@ -291,14 +313,14 @@ int8_t semtech_radio_tx_len(char* radio_tx_buf ,int16_t len, uint32_t timeout)
 #endif
         radio_send(lora_tx_buf);
         result = radio_wait_for_tx_done(timeout);
-        if (timeout !=0 && system_lptim_get() >= timeout_count) {
+        if (timeout !=0 && system_lptim_get() >= timeout_count) 
+        {
             result = -1; break;
         }
         if (jc == 0) {
             result = 1; break;
         }
         radio_tx_buf += (PAYLOAD_LENGTH-2);
-//        lr1110_system_set_sleep(&lr1110, sleep_cfg, 2000);
         lr1110_sleep_enter( 2000);
         system_time_wait_ms( 1200 );
     }
@@ -310,23 +332,20 @@ int8_t semtech_radio_tx_len(char* radio_tx_buf ,int16_t len, uint32_t timeout)
     return result;
 }
 
-
-
-int8_t semtech_radio_tx(char* radio_tx_buf ,uint32_t timeout)
+int semtech_radio_tx(char* radio_tx_buf ,uint32_t timeout)
 {
     int16_t len;
-    int8_t result;
+    int result;
 
     len = strlen(radio_tx_buf);
     result = semtech_radio_tx_len(radio_tx_buf, len, timeout);
+
     return result;
 }
 
-int8_t semtech_radio_rx_len(char* radio_rx_buf , int16_t *p_receive_len, int16_t max_len, uint32_t timeout)
+int semtech_radio_rx_len(char* radio_rx_buf , int16_t *p_receive_len, int16_t max_len, uint32_t timeout)
 {
     uint32_t timeout_count;
-//  int16_t ic, len;
-//    int16_t ic;
     int8_t result;
     int8_t first;
     int16_t len;
@@ -337,7 +356,8 @@ int8_t semtech_radio_rx_len(char* radio_rx_buf , int16_t *p_receive_len, int16_t
     *radio_rx_buf=0;
     result = 0;
     first = true;
-    for (receive_count=0; ;receive_count++ ) {
+    for (receive_count=0; ;receive_count++ ) 
+    {
         timeout_count = system_lptim_get() + timeout;
         *(int16_t*)lora_rx_buf =0;
 #if (DEBUG_LED == 1)
@@ -347,17 +367,22 @@ int8_t semtech_radio_rx_len(char* radio_rx_buf , int16_t *p_receive_len, int16_t
 #endif
         radio_receive();
         result = radio_wait_for_rx_done(lora_rx_buf, timeout);
-        if (timeout !=0 && system_lptim_get() >= timeout_count) {
+        if (timeout !=0 && system_lptim_get() >= timeout_count) 
+        {
             result = -1; 
             break; // Timeout Error
         }
         payload_count = lora_rx_buf[0];
 		crc8 = CRC8_calc(lora_rx_buf+2, PAYLOAD_LENGTH-2);
-		if ( (uint8_t)crc8 != (uint8_t)lora_rx_buf[1]) {
+
+		if ( (uint8_t)crc8 != (uint8_t)lora_rx_buf[1]) 
+        {
             result = -1;
             break; // CRC error
 		}
-        if (first) {
+
+        if (first) 
+        {
             *p_receive_len = (payload_count + 1) * (PAYLOAD_LENGTH-2);
             first = false;
         }
@@ -379,12 +404,13 @@ int8_t semtech_radio_rx_len(char* radio_rx_buf , int16_t *p_receive_len, int16_t
 }
 
 
-int8_t semtech_radio_rx(char* radio_rx_buf ,uint32_t timeout)
+int semtech_radio_rx(char* radio_rx_buf ,uint32_t timeout)
 {
     int16_t receive_len;
-    int8_t result;
+    int result;
 
     result = semtech_radio_rx_len(radio_rx_buf , &receive_len, 256, timeout);
+
     return result;
 }
 

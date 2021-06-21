@@ -1,7 +1,7 @@
 #ifndef SYS_LPM_H_
 #define SYS_LPM_H_
 
-#include "config_mode.h"
+#include "lr1110_user_config_mode.h"
 #include "RE01_256KB.h"
 #include "r_system_api.h"
 #include "r_lpm_api.h"

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "configuration.h"
+#include "lr1110_user_config_io.h"
 #include "RE01_256KB.h"
 #include "system_it.h"
 #include "system_gpio.h"

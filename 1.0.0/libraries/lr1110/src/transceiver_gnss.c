@@ -35,7 +35,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "config_mode.h"
+#include "lr1110_user_config_mode.h"
 #include "r_core_cfg.h"
 #include "r_system_api.h"
 #include "r_lpm_api.h"
@@ -54,6 +54,7 @@
 #include "r_spi_cmsis_api.h"
 #include "system/inc/system.h"
 #include "transceiver_gnss.h"
+#include "transceiver_power.h"
 
 
 
@@ -76,12 +77,6 @@ static lr1110_system_irq_mask_t irq_mask_test = LR1110_SYSTEM_IRQ_NONE;
 
 uint32_t last_rtc_adjust_second;
 
-
-
-
-/*****************************************************************
-
-*****************************************************************/
 
 int8_t get_results_from_host(char* result_buf, uint32_t timeout)
 {
@@ -121,9 +116,6 @@ int8_t get_results_from_host(char* result_buf, uint32_t timeout)
 
 int8_t GetResults( environment_location_t* location, float *accuracy,  char *geo_coding1, char *geo_coding2 )
 {
-//  int8_t nb_sat;
-//    uint8_t         count_attempt     = 0;
-//    const uint8_t   max_count_attempt = 1;
     int16_t ic;
 
     strcpy(uart_send_buf, "!RESULT\n");
@@ -137,12 +129,11 @@ int8_t GetResults( environment_location_t* location, float *accuracy,  char *geo
         }
         uart_fifo_receive_line(&uart0_dev, uart_receive_buf, 255 ,10000);
         delCRLF(uart_receive_buf);
-//      printf("PASS %dZZ%sZZ\n",(int)ic, uart_receive_buf);
         if (*uart_receive_buf != 0) {break;}
         system_time_wait_ms( 100 );
     }
     delCommaSemicolon(uart_receive_buf);
-//    sscanf( uart_receive_buf, "%f%f%f%f%s%s", &(location->latitude), &(location->longitude), &(location->altitude), accuracy, geo_coding1,geo_coding2 );
+    
     return true;
 }
 
@@ -187,16 +178,17 @@ int8_t semtech_GNSS_remote( char* gnss_result_buf, int8_t use_assist_mode , uint
     int8_t result;
     static lr1110_gnss_solver_assistance_position_t gnss_position;
     static lr1110_gnss_timings_t timings;
-//  char temp_buf[100];
     uint32_t last_agt_count;
-//  uint32_t last_agt_count2;
-//  int ic;
     uint8_t    inter_capture_delay_second;
     lr1110_status_t  modem_response_code;
     modem_response_code = LR1110_STATUS_OK;
 
     lr1110_system_set_dio_irq_params(&lr1110,
-     LR1110_SYSTEM_IRQ_GNSS_SCAN_DONE | LR1110_SYSTEM_IRQ_TX_DONE | LR1110_SYSTEM_IRQ_RX_DONE | LR1110_SYSTEM_IRQ_TIMEOUT, 0 );
+                                    LR1110_SYSTEM_IRQ_GNSS_SCAN_DONE | 
+                                    LR1110_SYSTEM_IRQ_TX_DONE | 
+                                    LR1110_SYSTEM_IRQ_RX_DONE | 
+                                    LR1110_SYSTEM_IRQ_TIMEOUT, 
+                                    0 );
 
     lr1110_gnss_set_constellations_to_use( &lr1110, LR1110_GNSS_GPS_MASK | LR1110_GNSS_BEIDOU_MASK );
 
@@ -204,7 +196,8 @@ int8_t semtech_GNSS_remote( char* gnss_result_buf, int8_t use_assist_mode , uint
 
     system_time_wait_ms( 10 );
 
-    lna_on();
+    lr1110_lna_on();
+
     lr1110_system_clear_irq_status( &lr1110, LR1110_SYSTEM_IRQ_ALL_MASK );
 
     R_NVIC_DisableIRQ(SYSTEM_CFG_EVENT_NUMBER_PORT_IRQ3);
@@ -217,31 +210,30 @@ PFS->P410PFS = 0x04 | 0x00;
 PFS->P210PFS = 0x04 | 0x00;
 #endif
 
-    if (use_assist_mode == true) {
+    if (use_assist_mode == true) 
+    {
 
         gnss_position.latitude = location_assist.latitude;
         gnss_position.longitude = location_assist.longitude;
 
         lr1110_gnss_set_assistance_position( &lr1110, &gnss_position );
-
         last_agt_count = system_lptim_get();
         lr1110_gnss_scan_assisted( &lr1110,
-                rtc_read_current_binary_time(),
-            LR1110_GNSS_OPTION_DEFAULT,
-            LR1110_GNSS_BIT_CHANGE_MASK | LR1110_GNSS_DOPPLER_MASK | LR1110_GNSS_IRQ_PSEUDO_RANGE_MASK,
-            DEMO_GNSS_ASSISTED_N_SATELLLITE_DEFAULT );
-    } else {
+                                    rtc_read_current_binary_time(),
+                                    LR1110_GNSS_OPTION_DEFAULT,
+                                    LR1110_GNSS_BIT_CHANGE_MASK | LR1110_GNSS_DOPPLER_MASK | LR1110_GNSS_IRQ_PSEUDO_RANGE_MASK,
+                                    DEMO_GNSS_ASSISTED_N_SATELLLITE_DEFAULT );
+    } 
+    else 
+    {
 
         last_agt_count = system_lptim_get();
         lr1110_gnss_scan_autonomous(&lr1110,
-            rtc_read_current_binary_time() ,
-            LR1110_GNSS_OPTION_BEST_EFFORT,
-            LR1110_GNSS_BIT_CHANGE_MASK | LR1110_GNSS_DOPPLER_MASK | LR1110_GNSS_IRQ_PSEUDO_RANGE_MASK,
-            DEMO_GNSS_AUTONOMOUS_N_SATELLLITE_DEFAULT );
+                                    rtc_read_current_binary_time() ,
+                                    LR1110_GNSS_OPTION_BEST_EFFORT,
+                                    LR1110_GNSS_BIT_CHANGE_MASK | LR1110_GNSS_DOPPLER_MASK | LR1110_GNSS_IRQ_PSEUDO_RANGE_MASK,
+                                    DEMO_GNSS_AUTONOMOUS_N_SATELLLITE_DEFAULT );
     }
-
-
-
     last_agt_count = system_lptim_get();
 
     result = semtech_event_wait(GNSS_WAIT_INTERVAL);
@@ -254,19 +246,12 @@ PFS->P210PFS = 0x04 | 0x01;
 #endif
 
     last_agt_count = system_lptim_get();
-    lna_off();
+    lr1110_lna_off();
 
     lr1110_system_get_irq_status( &lr1110, &irq_mask_test );
-
-
     lr1110_system_clear_irq_status( &lr1110, LR1110_SYSTEM_IRQ_ALL_MASK );
-
     lr1110_gnss_get_timings( &lr1110, &timings );
-
-
     lr1110_gnss_get_nb_detected_satellites(&lr1110,  &nb_sat );
-
-
     lr1110_gnss_get_result_size( &lr1110, &nav_message_size );
 
     if( nav_message_size <= GNSS_DEMO_NAV_MESSAGE_MAX_LENGTH )
@@ -277,10 +262,8 @@ PFS->P210PFS = 0x04 | 0x01;
     delay_since_capture =  (system_lptim_get() - last_agt_count + 500)/1000;
 
     gnss_tx_header* p_header;
-
-
     p_header = (gnss_tx_header*)gnss_result_buf;
-// Total Length = nav_message_size + 14
+
     strcpy(gnss_result_buf, "@G" );
     p_header->nav_message_size     = (uint16_t)(nav_message_size & 0xFFFF);
     p_header->radio_ms             = (uint32_t)(timings.radio_ms);
@@ -290,9 +273,7 @@ PFS->P210PFS = 0x04 | 0x01;
 
     *p_radio_tx_len = nav_message_size + sizeof(gnss_tx_header);
 
-
     return nb_sat;
-//    printf( "GNSS Result ZZ%sZZ\n", gnss_result_buf);
 }
 
 

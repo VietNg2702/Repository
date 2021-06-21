@@ -36,6 +36,7 @@ uint8_t hexd(uint8_t c0);
 uint8_t CRC8_calc(uint8_t *buff, uint16_t size);
 uint8_t CRC8_calc_software(uint8_t *buff, uint16_t size);
 void wait_long(void);
+
 #ifdef __cplusplus
 }
 #endif

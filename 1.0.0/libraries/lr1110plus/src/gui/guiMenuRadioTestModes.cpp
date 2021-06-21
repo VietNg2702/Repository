@@ -1,0 +1,91 @@
+/**
+ * @file      guiMenuRadioTestModes.cpp
+ *
+ * @brief     Implementation of the gui menu for radio test modes page.
+ *
+ * Revised BSD License
+ * Copyright Semtech Corporation 2020. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Semtech corporation nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL SEMTECH CORPORATION BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#include "guiMenuRadioTestModes.h"
+
+GuiMenuRadioTestModes::GuiMenuRadioTestModes( version_handler_t* version_handler )
+    : GuiMenuCommon( GUI_PAGE_MENU_RADIO_TEST_MODES )
+{
+    uint8_t index = 0;
+
+    this->createHeaderWithIcons( "RADIO TEST MODES" );
+
+    this->createTestEntry( index++, &( this->lbl_radio_tx_cw ), &( this->btn_radio_tx_cw ),
+                           &( this->lbl_btn_radio_tx_cw ), "TX Cont. Wave", true, GuiMenuRadioTestModes::callback );
+
+    this->createTestEntry( index++, &( this->lbl_radio_per ), &( this->btn_radio_per ), &( this->lbl_btn_radio_per ),
+                           "Packet Error Rate", true, GuiMenuRadioTestModes::callback );
+
+    if( version_handler->device_type == VERSION_DEVICE_TRANSCEIVER )
+    {
+        this->createTestEntry( index++, &( this->lbl_radio_ping_pong ), &( this->btn_radio_ping_pong ),
+                               &( this->lbl_btn_radio_ping_pong ), "Ping Pong", true, GuiMenuRadioTestModes::callback );
+    }
+
+    this->createActionButton( &( this->btn_back ), "BACK", GuiMenuRadioTestModes::callback, GUI_BUTTON_POS_CENTER, -5,
+                              true );
+
+    this->createActionButton( &( this->btn_config ), "CONFIG", GuiMenuRadioTestModes::callback, GUI_BUTTON_POS_RIGHT,
+                              -5, true );
+
+    lv_scr_load( this->screen );
+}
+
+GuiMenuRadioTestModes::~GuiMenuRadioTestModes( ) {}
+
+void GuiMenuRadioTestModes::callback( lv_obj_t* obj, lv_event_t event )
+{
+    GuiMenuRadioTestModes* self = ( GuiMenuRadioTestModes* ) lv_obj_get_user_data( obj );
+
+    if( ( event == LV_EVENT_RELEASED ) && ( lv_btn_get_state( obj ) != LV_BTN_STATE_INA ) )
+    {
+        if( obj == self->btn_radio_tx_cw )
+        {
+            GuiCommon::_event = GUI_EVENT_START_TX_CW;
+        }
+        else if( obj == self->btn_radio_per )
+        {
+            GuiCommon::_event = GUI_EVENT_START_PER_TX;
+        }
+        else if( obj == self->btn_radio_ping_pong )
+        {
+            GuiCommon::_event = GUI_EVENT_START_PING_PONG;
+        }
+        else if( obj == self->btn_back )
+        {
+            GuiCommon::_event = GUI_EVENT_BACK;
+        }
+        else if( obj == self->btn_config )
+        {
+            GuiCommon::_event = GUI_EVENT_CONFIG;
+        }
+    }
+}

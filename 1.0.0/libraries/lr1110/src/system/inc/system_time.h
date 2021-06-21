@@ -7,7 +7,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "config_mode.h"
+#include "lr1110_user_config_mode.h"
 #include "RE01_256KB.h"
 #include "r_system_api.h"
 

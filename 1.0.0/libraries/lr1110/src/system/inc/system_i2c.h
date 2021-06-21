@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "RE01_256KB.h"
 #include "r_i2c_cmsis_api.h"
 #include "r_system_api.h"
 

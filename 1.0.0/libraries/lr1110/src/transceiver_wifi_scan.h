@@ -33,7 +33,6 @@
 #define __DEMO_TRANSCEIVER_WIFI_SCAN_H__
 
 #include "demo_configuration.h"
-//#include "demo_transceiver_wifi_interface.h"
 
 typedef struct {
 	uint8_t mac_address[6];
@@ -52,7 +51,6 @@ typedef struct {
 } __attribute__ ((packed)) wifi_tx_header;
 
 
-
 typedef enum
 {
     DEMO_WIFI_INIT,
@@ -62,29 +60,20 @@ typedef enum
     DEMO_WIFI_TERMINATED,
 } demo_wifi_state_t;
 
-
-void WifiScan_DeInit( );
 void WifiScan_Configure( demo_wifi_settings_t *p_config );
+
 void WifiScan_ExecuteScan( radio_t* radio );
+
 void WifiScan_FetchAndSaveResults( radio_t* radio );
+
 void WifiScan_FetchAndSaveBasicCompleteResults( radio_t* radio );
+
 void WifiScan_FetchAndSaveBasicMacChannelTypeResults( radio_t* radio );
-void WifiScan_AddScanToResults( const lr1110_system_reg_mode_t regMode, 
-								demo_wifi_scan_all_results_t* p_results,
-                               const lr1110_wifi_basic_complete_result_t* scan_result, 
-                               const uint8_t nbr_results );
 
-
+void WifiScan_PacketToString(wifi_tx_header* src_header, wifi_tx_packet* src_mac, char* dst);
 
 void WifiInterface_SpecificRuntime(void);
 
 int16_t CommunicationDemo_Store( const demo_wifi_scan_all_results_t* p_wifi_results , int8_t *p_wifi_result_str );
-
-
-void wifi_packet_to_string(wifi_tx_header* src_header, wifi_tx_packet* src_mac, char* dst);
-
-
-
-
 
 #endif  //__DEMO_TRANSCEIVER_WIFI_SCAN_H__

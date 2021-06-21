@@ -1,4 +1,4 @@
-#include "../inc/system_i2c.h"
+#include "../inc/system_spi.h"
 #include "../inc/system.h"
 /*!
 *  The value of the maximal timeout for I2C waiting loops

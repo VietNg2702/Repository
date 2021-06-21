@@ -17,22 +17,11 @@ typedef struct {
 
 
 int8_t semtech_GNSS_remote( char* gnss_result_buf, int8_t use_assist_mode ,	uint16_t *p_radio_tx_len);
-//int8_t semtech_GNSS_remote( char* gnss_result_buf, int8_t use_assist_mode );
-//void semtech_GNSS( void );
-
 void set_count_gnss_date();
 int8_t get_results_from_host(char* result_buf, uint32_t timeout);
 int8_t get_date_from_host(char* receive_buf, uint32_t timeout);
 int8_t read_gnss_date(char* receive_buf);
 int8_t semtech_event_wait(uint16_t timeout);
-
-void lr1110_power_on(void);
-void lr1110_power_off(void);
-void lna_on(void);
-void lna_off(void);
-void DCDC_on(void);
-void DCDC_off(void);
-
 void gnss_packet_to_string( gnss_tx_header* src, char* dst);
 
 

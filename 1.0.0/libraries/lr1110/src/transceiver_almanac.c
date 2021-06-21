@@ -35,7 +35,7 @@
 #include <ctype.h>
 #include <math.h>
 
-#include "config_mode.h"
+#include "lr1110_user_config_mode.h"
 #include "r_core_cfg.h"
 #include "r_system_api.h"
 #include "r_lpm_api.h"
@@ -89,12 +89,12 @@ uint16_t GetAlmanacAgeFromGpsEpochInDays( uint16_t almanac_age )
     uint16_t almanac_age_days_since_gps_epoch;
 
     almanac_age_days_since_gps_epoch    = almanac_age + days_between_2019_rollover_to_epoch;
-__NOP();
+    __NOP();
     return almanac_age_days_since_gps_epoch;
 }
 
 
-uint16_t GetAlmanacAgeDaysSinceToday( )
+uint16_t GetAlmanacAgeDaysSinceToday(void)
 {
     // First, we get the age of the almanac of the satellite id 0
     uint16_t almanac_age_since_epoch;
@@ -118,13 +118,13 @@ uint16_t GetAlmanacAgeDaysSinceToday( )
     now_days    = now_seconds / 3600 / 24;
 
     almanac_age_since_update = now_days - almanac_age_since_epoch;
-__NOP();
+    __NOP();
     return almanac_age_since_update;
 }
 
 
 
-int8_t almanac_update_TX()
+int8_t AlmanacUpdateTX(void)
 {
     int8_t result;
     uint16_t almanac_age_days;
@@ -188,7 +188,7 @@ Skip2:
 }
 
 
-int8_t get_AlmanacData_from_PC(uint8_t data_buffer[], uint32_t timeout)
+int8_t GetAlmanacDataFromPC(uint8_t data_buffer[], uint32_t timeout)
 {
     int8_t result;
     int16_t ic, jc;
@@ -213,7 +213,7 @@ int8_t get_AlmanacData_from_PC(uint8_t data_buffer[], uint32_t timeout)
         last_agt_count = system_lptim_get();
         for (; ;) {
             if (system_lptim_get() - last_agt_count > timeout) {
-__NOP();
+                __NOP();
                 result = -1;
                 goto Skip; // Timeout
             }
