@@ -14,6 +14,8 @@
         "hdc2010.h": "c",
         "config_mode.h": "c",
         "lr1110_user_config_io.h": "c",
-        "lr1110_user_config_mode.h": "c"
+        "lr1110_user_config_mode.h": "c",
+        "touch.h": "c",
+        "configuration.h": "c"
     }
 }

@@ -1,5 +1,5 @@
 {
-    "sketch": "libraries\\lr1110\\examples\\main\\main.ino",
+    "sketch": "libraries\\lr1110\\example\\application\\application.ino",
     "configuration": "toolsloc=default",
     "board": "renesas-re:re01:ek_re01_256kb"
 }
